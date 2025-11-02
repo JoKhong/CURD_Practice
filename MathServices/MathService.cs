@@ -2,9 +2,9 @@
 
 namespace MathServices
 {
-    public class MathServices : ISum
+    public class MathService : ISum
     {
-        public int AddTwo(int first, int second)
+        public int Add(int first, int second)
         {
             return first + second;
         }

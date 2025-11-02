@@ -2,6 +2,6 @@
 {
     public interface ISum
     {
-        public int AddTwo(int first, int second);
+        public int Add(int first, int second);
     }
 }

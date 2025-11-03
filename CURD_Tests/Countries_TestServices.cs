@@ -1,8 +1,9 @@
-using Microsoft.Extensions.DependencyInjection;
-using ServiceContracts.DTO;
-using ServiceContracts;
-using Services;
+using Entities;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
+using ServiceContracts;
+using ServiceContracts.DTO;
+using Services;
 
 namespace CURD_Tests
 {
@@ -126,5 +127,36 @@ namespace CURD_Tests
         }
 
         #endregion
+
+        #region GetCountryById
+
+        [Fact]
+        public void GetCountryById_ValidId()
+        {
+            var countryService = _provider.GetService<ICountriesService>();
+
+            CountryAddRequest request = new  CountryAddRequest() { CountryName = "Germany" };
+
+            CountryResponse response = countryService.AddCountry(request);
+            CountryResponse? countryById = countryService.GetCountryById(response.CountryId);
+
+            Assert.Equal(countryById, response);
+        }
+
+        [Fact]
+        public void GetCountryById_InvalidId()
+        {
+            var countryService = _provider.GetService<ICountriesService>();
+
+            CountryAddRequest request = new CountryAddRequest() { CountryName = "Japan" };
+
+            CountryResponse response = countryService.AddCountry(request);
+            CountryResponse? countryById = countryService.GetCountryById(Guid.NewGuid());
+
+            Assert.Null(countryById);
+        }
+
+        #endregion
+
     }
 }

@@ -1,9 +1,4 @@
 ﻿using Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ServiceContracts.DTO
 {
@@ -16,8 +11,9 @@ namespace ServiceContracts.DTO
 
         public Country ToCountry()
         {
-            Country country = new Country();
-            country.CountryName = CountryName;
+            Country country = new Country() {
+                CountryName = CountryName,
+            };
 
             return country;
         }

@@ -18,6 +18,7 @@ namespace CURD_Tests
             _provider = services.BuildServiceProvider();
         }
 
+        #region AddCountry 
         [Fact]
         public void AddCountry_NullAddRequest()
         {
@@ -71,13 +72,59 @@ namespace CURD_Tests
         {
             var countryService = _provider.GetService<ICountriesService>();
 
-            CountryResponse result = countryService.AddCountry(new CountryAddRequest()
+            CountryAddRequest request = new CountryAddRequest
             {
                 CountryName = "Japan"
-            });
+            };
 
-            Assert.True(result.CountryId != Guid.Empty);
+            CountryResponse addedCountry = countryService.AddCountry(request);
+            List<CountryResponse> countriesList = countryService.GetAllCountries();
+
+            Assert.True(addedCountry.CountryId != Guid.Empty);
+            Assert.Contains(addedCountry, countriesList);
+        }
+        #endregion
+
+        #region GetAllCountries
+
+        [Fact]
+        public void GetAllCountries_EmptyList()
+        {
+            var countryService = _provider.GetService<ICountriesService>();
+
+            List<CountryResponse> result = countryService.GetAllCountries();
+
+            Assert.Empty(result);
         }
 
+        [Fact]
+        public void GetAllCountries_AddFewCountries()
+        {
+            var countryService = _provider.GetService<ICountriesService>();
+
+            List<CountryResponse> addedCountryResponses = new List<CountryResponse>();
+
+            //AddCountries First
+            List<CountryAddRequest> addCountries = new List<CountryAddRequest>() 
+            {
+                new CountryAddRequest(){ CountryName = "Germany"},
+                new CountryAddRequest(){ CountryName = "Japan"},
+                new CountryAddRequest(){ CountryName = "Malaysia"}
+            };
+
+            foreach (CountryAddRequest country in addCountries) 
+            {
+                addedCountryResponses.Add(countryService.AddCountry(country));
+            }
+
+            List<CountryResponse> getAllCountriesResult = countryService.GetAllCountries();
+
+            foreach (CountryResponse countryResponse in addedCountryResponses)
+            {
+                Assert.Contains(countryResponse, getAllCountriesResult);
+            }
+        }
+
+        #endregion
     }
 }

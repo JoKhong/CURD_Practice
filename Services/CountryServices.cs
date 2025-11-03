@@ -1,15 +1,16 @@
-﻿using ServiceContracts;
+﻿using Entities;
+using ServiceContracts;
 using ServiceContracts.DTO;
 
 namespace Services
 {
     public class CountryServices : ICountriesService
     {
-        List<string> _countries;
+        List<Country> _countries;
 
         public CountryServices()
         {
-            _countries = new List<string>();
+            _countries = new List<Country>();
         }
 
         public CountryResponse AddCountry(CountryAddRequest? AddRequest)
@@ -21,7 +22,7 @@ namespace Services
                     throw new ArgumentException("AddRequest.CountryName is null or empty");
                 }
 
-                if (_countries.Contains(AddRequest.CountryName)) 
+                if (_countries.Where(aCountry => aCountry.CountryName == AddRequest.CountryName).Count() > 0) 
                 {
                     throw new ArgumentException("Country already added");
                 }
@@ -29,13 +30,18 @@ namespace Services
 
             try 
             {
-                _countries.Add(AddRequest.CountryName);
+                //Country country = new Country
+                //{
+                //    CountryId = Guid.NewGuid(),
+                //    CountryName = AddRequest.CountryName
+                //};
 
-                return new CountryResponse()
-                {
-                    CountryId = Guid.NewGuid(),
-                    CountryName = AddRequest.CountryName
-                };
+                Country country = AddRequest.ToCountry();
+                country.CountryId = Guid.NewGuid();
+
+                _countries.Add(country);
+
+                return country.ToCountryResponse();
             }
             catch(Exception ex)
             {
@@ -45,6 +51,11 @@ namespace Services
                 return null;
             }
 
+        }
+
+        public List<CountryResponse> GetAllCountries()
+        {
+            return _countries.Select(country => country.ToCountryResponse()).ToList();
         }
     }
 }

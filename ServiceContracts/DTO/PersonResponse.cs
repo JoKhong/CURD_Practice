@@ -12,6 +12,7 @@ namespace ServiceContracts.DTO
         public string? Email { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string? Gender { get; set; }
+        public Guid? CountryId { get; set; }
         public string? Country { get; set; }
         public string? Address { get; set; }
         public bool ReceiveNewsLetters { get; set; }
@@ -31,6 +32,8 @@ namespace ServiceContracts.DTO
                 this.PersonID == other.PersonID &&
                 this.PersonName == other.PersonName &&
                 this.Email == other.Email &&
+                this.CountryId == other.CountryId &&
+                this.Country == other.Country &&
                 this.DateOfBirth == other.DateOfBirth &&
                 this.Gender == other.Gender &&
                 this.Address == other.Address &&
@@ -44,6 +47,19 @@ namespace ServiceContracts.DTO
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return $"Person ID: {PersonID}, " +
+                $"Person Name: {PersonName}, " +
+                $"Email: {Email}, " +
+                $"Date of Birth: {DateOfBirth?.ToString("dd MMM yyyy")}, " +
+                $"Gender: {Gender}, " +
+                $"Country ID: {CountryId}, " +
+                $"Country: {Country}, " +
+                $"Address: {Address}, " +
+                $"Receive News Letters: {ReceiveNewsLetters}";
         }
 
     }

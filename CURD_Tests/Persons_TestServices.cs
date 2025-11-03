@@ -3,18 +3,22 @@ using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using Services;
+using Xunit.Abstractions;
 
 namespace CURD_Tests
 {
     public class Persons_TestServices
     {
         private readonly ServiceProvider _provider;
+        private readonly ITestOutputHelper _testOutputHelper;
 
-        public Persons_TestServices()
+        public Persons_TestServices(ITestOutputHelper testOutputHelper)
         {
             var services = new ServiceCollection();
             services.AddScoped<IPersonsServices, PersonServices>();
             services.AddScoped<ICountriesService, CountryServices>();
+
+            _testOutputHelper = testOutputHelper;
 
             _provider = services.BuildServiceProvider();
         }
@@ -134,6 +138,20 @@ namespace CURD_Tests
             
             List<PersonResponse> requestResponse = personsServices.GetAllPersons();
 
+            _testOutputHelper.WriteLine("Added:");
+            foreach (var response in addedResponses)
+            {
+                _testOutputHelper.WriteLine(response.ToString());
+            }
+
+            _testOutputHelper.WriteLine("Response:");
+            foreach (var response in requestResponse)
+            {
+                _testOutputHelper.WriteLine(response.ToString());
+            }
+
+
+            //Validate
             foreach (PersonResponse item in addedResponses)
             {
                 Assert.Contains(item, requestResponse);

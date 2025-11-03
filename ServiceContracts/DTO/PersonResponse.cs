@@ -1,4 +1,6 @@
 ﻿using Entities;
+using ServiceContracts.Enums;
+using System;
 
 namespace ServiceContracts.DTO
 {
@@ -7,7 +9,7 @@ namespace ServiceContracts.DTO
     /// </summary>
     public class PersonResponse
     {
-        public Guid PersonID { get; set; }
+        public Guid PersonId { get; set; }
         public string? PersonName { get; set; }
         public string? Email { get; set; }
         public DateTime? DateOfBirth { get; set; }
@@ -29,7 +31,7 @@ namespace ServiceContracts.DTO
             PersonResponse other = (PersonResponse)obj;
 
             bool result = (
-                this.PersonID == other.PersonID &&
+                this.PersonId == other.PersonId &&
                 this.PersonName == other.PersonName &&
                 this.Email == other.Email &&
                 this.CountryId == other.CountryId &&
@@ -51,7 +53,7 @@ namespace ServiceContracts.DTO
 
         public override string ToString()
         {
-            return $"Person ID: {PersonID}, " +
+            return $"Person ID: {PersonId}, " +
                 $"Person Name: {PersonName}, " +
                 $"Email: {Email}, " +
                 $"Date of Birth: {DateOfBirth?.ToString("dd MMM yyyy")}, " +
@@ -60,6 +62,23 @@ namespace ServiceContracts.DTO
                 $"Country: {Country}, " +
                 $"Address: {Address}, " +
                 $"Receive News Letters: {ReceiveNewsLetters}";
+        }
+
+        public PersonUpdateRequest ToPersonUpdateRequest()
+        {
+            PersonUpdateRequest ret = new PersonUpdateRequest()
+            {
+                PersonId = PersonId,
+                PersonName = PersonName,
+                Email = Email,
+                DateOfBirth = DateOfBirth,
+                Gender = (SexOptions)Enum.Parse(typeof(SexOptions), Gender, true),
+                CountryId = CountryId,
+                Address = Address,
+                ReceiveNewsLetters = ReceiveNewsLetters,
+            };
+
+            return ret;
         }
 
     }
@@ -75,12 +94,12 @@ namespace ServiceContracts.DTO
         {
             PersonResponse response = new PersonResponse()
             {
-                PersonID = person.PersonID,
+                PersonId = person.PersonID,
                 PersonName = person.PersonName,
                 Email = person.Email,
                 DateOfBirth = person.DateOfBirth,
                 Gender = person.Gender,
-                CountryId = person.CountryID,
+                CountryId = person.CountryId,
                 Address = person.Address,
                 ReceiveNewsLetters = person.ReceiveNewsLetters,
                 Age = (person.DateOfBirth != null) ? Math.Round((DateTime.Now - person.DateOfBirth.Value).TotalDays / 365.25) : null

@@ -1,5 +1,6 @@
 ﻿using ServiceContracts.DTO;
 using Entities;
+using ServiceContracts.Enums;
 
 namespace ServiceContracts
 {
@@ -24,6 +25,8 @@ namespace ServiceContracts
         /// <param name="id"></param>
         /// <returns>Matching country object</returns>
         CountryResponse? GetCountryById(Guid? id);
+
+        
 
     }
 }

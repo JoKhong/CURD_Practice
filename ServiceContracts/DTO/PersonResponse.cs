@@ -12,7 +12,7 @@ namespace ServiceContracts.DTO
         public string? Email { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string? Gender { get; set; }
-        public Guid? CountryID { get; set; }
+        public string? Country { get; set; }
         public string? Address { get; set; }
         public bool ReceiveNewsLetters { get; set; }
         public double? Age { get; set; }
@@ -33,7 +33,6 @@ namespace ServiceContracts.DTO
                 this.Email == other.Email &&
                 this.DateOfBirth == other.DateOfBirth &&
                 this.Gender == other.Gender &&
-                this.CountryID == other.CountryID &&
                 this.Address == other.Address &&
                 this.ReceiveNewsLetters == other.ReceiveNewsLetters
                 );
@@ -60,11 +59,11 @@ namespace ServiceContracts.DTO
         {
             PersonResponse response = new PersonResponse()
             {
+                PersonID = person.PersonID,
                 PersonName = person.PersonName,
                 Email = person.Email,
                 DateOfBirth = person.DateOfBirth,
                 Gender = person.Gender,
-                CountryID = person.CountryID,
                 Address = person.Address,
                 ReceiveNewsLetters = person.ReceiveNewsLetters,
                 Age = (person.DateOfBirth != null) ? Math.Round((DateTime.Now - person.DateOfBirth.Value).TotalDays / 365.25) : null

@@ -6,7 +6,7 @@ namespace Services
 {
     public class CountryServices : ICountriesService
     {
-        List<Country> _countries;
+        private readonly List<Country> _countries;
 
         public CountryServices()
         {
@@ -15,17 +15,17 @@ namespace Services
 
         public CountryResponse AddCountry(CountryAddRequest? AddRequest)
         {
-            if (AddRequest != null)
-            {
-                if (string.IsNullOrEmpty(AddRequest.CountryName))
-                {
-                    throw new ArgumentException("AddRequest.CountryName is null or empty");
-                }
+            if (AddRequest == null)
+                throw new ArgumentNullException();
 
-                if (_countries.Where(aCountry => aCountry.CountryName == AddRequest.CountryName).Count() > 0) 
-                {
-                    throw new ArgumentException("Country already added");
-                }
+            if (string.IsNullOrEmpty(AddRequest.CountryName))
+            {
+                throw new ArgumentException("AddRequest.CountryName is null or empty");
+            }
+
+            if (_countries.Where(aCountry => aCountry.CountryName == AddRequest.CountryName).Count() > 0)
+            {
+                throw new ArgumentException("Country already added");
             }
 
             try 
@@ -45,9 +45,6 @@ namespace Services
             }
             catch(Exception ex)
             {
-                if (AddRequest == null)
-                    throw new ArgumentNullException();
-
                 return null;
             }
 

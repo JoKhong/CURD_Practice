@@ -20,5 +20,13 @@ namespace ServiceContracts
 
         PersonResponse? GetPersonById(Guid? id);
 
+        /// <summary>
+        /// Get Persons based on search by field and Search name
+        /// </summary>
+        /// <param name="searchBy"></param>
+        /// <param name="searchString"></param>
+        /// <returns>Returns PersonResponse based on searchBy and searchString</returns>
+        List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString);
+
     }
 }

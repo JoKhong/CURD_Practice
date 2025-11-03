@@ -56,7 +56,7 @@ namespace ServiceContracts.DTO
                 $"Email: {Email}, " +
                 $"Date of Birth: {DateOfBirth?.ToString("dd MMM yyyy")}, " +
                 $"Gender: {Gender}, " +
-                $"Country ID: {CountryId}, " +
+                $"Country ID: {CountryId?.ToString()}, " +
                 $"Country: {Country}, " +
                 $"Address: {Address}, " +
                 $"Receive News Letters: {ReceiveNewsLetters}";
@@ -80,6 +80,7 @@ namespace ServiceContracts.DTO
                 Email = person.Email,
                 DateOfBirth = person.DateOfBirth,
                 Gender = person.Gender,
+                CountryId = person.CountryID,
                 Address = person.Address,
                 ReceiveNewsLetters = person.ReceiveNewsLetters,
                 Age = (person.DateOfBirth != null) ? Math.Round((DateTime.Now - person.DateOfBirth.Value).TotalDays / 365.25) : null

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Entities;
+using Microsoft.Extensions.DependencyInjection;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
@@ -160,6 +161,124 @@ namespace CURD_Tests
 
         #endregion
 
+        #region GetFilteredPersons
+
+        //If the search text is empty, return all Persons
+        [Fact]
+        public void GetFilteredPersons_SerchStringEmpty()
+        {
+            var personsServices = _provider.GetService<IPersonsServices>();
+            var countryService = _provider.GetService<ICountriesService>();
+
+            CountryAddRequest countryRequest1 = new CountryAddRequest() { CountryName = "Westeris" };
+            CountryAddRequest countryRequest2 = new CountryAddRequest() { CountryName = "Eastania" };
+
+            CountryResponse countryResponse1 = countryService.AddCountry(countryRequest1);
+            CountryResponse countryResponse2 = countryService.AddCountry(countryRequest2);
+
+            _testOutputHelper.WriteLine($"countryResponse1 ID:{countryResponse1.CountryId} and CountryName: {countryResponse1.CountryName}");
+            _testOutputHelper.WriteLine($"countryResponse2 ID:{countryResponse2.CountryId} and CountryName: {countryResponse2.CountryName}");
+
+            List<PersonResponse> personAddResponse = new List<PersonResponse>();
+            List<PersonAddRequest> personAddRequest = new List<PersonAddRequest>()
+            {
+                new PersonAddRequest() {PersonName = "Anya", Email = "Anya@Forger.com", Gender = SexOptions.Female, CountryID = countryResponse2.CountryId},
+                new PersonAddRequest() {PersonName = "Loid", Email = "Loid@Forger.com", Gender = SexOptions.Male, CountryID = countryResponse1.CountryId},
+                new PersonAddRequest() {PersonName = "Yor", Email = "Yor@Forger.com", Gender = SexOptions.Female, CountryID = countryResponse2.CountryId},
+                new PersonAddRequest() {PersonName = "Dond", Email = "Bond@Forger.com", Gender = SexOptions.Male, CountryID = countryResponse2.CountryId}
+            };
+            foreach (PersonAddRequest addRequest in personAddRequest)
+            {
+                PersonResponse aResponse = personsServices.AddPerson(addRequest);
+                aResponse.Country = countryService.GetCountryById(aResponse.CountryId).CountryName;
+
+                personAddResponse.Add(aResponse);
+            }
+
+            _testOutputHelper.WriteLine("Added:");
+            foreach (var response in personAddResponse)
+            {
+                _testOutputHelper.WriteLine(response.ToString());
+            }
+
+            List<PersonResponse> requestResponse = personsServices.GetFilteredPersons(nameof(Person.PersonName), "");
+
+            _testOutputHelper.WriteLine("Response:");
+            foreach (var response in requestResponse)
+            {
+                _testOutputHelper.WriteLine(response.ToString());
+            }
+
+            //Assert
+            foreach (PersonResponse item in personAddResponse)
+            {
+                Assert.Contains(item, requestResponse);
+            }
+        }
+
+        [Fact]
+        public void GetFilteredPersons_SearchStringFilled()
+        {
+            var personsServices = _provider.GetService<IPersonsServices>();
+            var countryService = _provider.GetService<ICountriesService>();
+
+            CountryAddRequest countryRequest1 = new CountryAddRequest() { CountryName = "Westeris" };
+            CountryAddRequest countryRequest2 = new CountryAddRequest() { CountryName = "Eastania" };
+
+            CountryResponse countryResponse1 = countryService.AddCountry(countryRequest1);
+            CountryResponse countryResponse2 = countryService.AddCountry(countryRequest2);
+
+            _testOutputHelper.WriteLine($"countryResponse1 ID:{countryResponse1.CountryId} and CountryName: {countryResponse1.CountryName}");
+            _testOutputHelper.WriteLine($"countryResponse2 ID:{countryResponse2.CountryId} and CountryName: {countryResponse2.CountryName}");
+
+
+            List<PersonResponse> personAddResponse = new List<PersonResponse>();
+            List<PersonAddRequest> personAddRequest = new List<PersonAddRequest>()
+            {
+                new PersonAddRequest() {PersonName = "Anya Forger", Email = "Anya@Forger.com", Gender = SexOptions.Female, CountryID = countryResponse2.CountryId},
+                new PersonAddRequest() {PersonName = "Loid Forger", Email = "Loid@Forger.com", Gender = SexOptions.Male, CountryID = countryResponse1.CountryId},
+                new PersonAddRequest() {PersonName = "Yor Forger", Email = "Yor@Forger.com", Gender = SexOptions.Female, CountryID = countryResponse2.CountryId},
+                new PersonAddRequest() {PersonName = "Dond", Email = "Bond@Forger.com", Gender = SexOptions.Male, CountryID = countryResponse2.CountryId}
+            };
+            foreach (PersonAddRequest addRequest in personAddRequest)
+            {
+                PersonResponse aResponse = personsServices.AddPerson(addRequest);
+                aResponse.Country = countryService.GetCountryById(aResponse.CountryId).CountryName;
+
+                personAddResponse.Add(aResponse);
+            }
+
+            _testOutputHelper.WriteLine("Added:");
+            foreach (var response in personAddResponse)
+            {
+                _testOutputHelper.WriteLine(response.ToString());
+            }
+
+            string searchString = "An";
+
+            List<PersonResponse> filteredSearchResponse = personsServices.GetFilteredPersons(nameof(Person.PersonName), searchString);
+
+            _testOutputHelper.WriteLine("Response:");
+            foreach (var response in filteredSearchResponse)
+            {
+                _testOutputHelper.WriteLine(response.ToString());
+            }
+
+            //Assert
+            foreach (PersonResponse addedPerson in personAddResponse)
+            {
+                if(addedPerson.PersonName != null)
+                {
+                    if (addedPerson.PersonName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Assert.Contains(addedPerson, filteredSearchResponse);
+                    }
+                }
+            }
+        }
+
+        #endregion
+
         #region GetPersonById
         [Fact]
         public void GetPersonById_ValidId()
@@ -214,5 +333,8 @@ namespace CURD_Tests
             Assert.Null(personById);
         }
         #endregion
+
+
+
     }
 }

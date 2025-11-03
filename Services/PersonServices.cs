@@ -73,5 +73,10 @@ namespace Services
 
             return ConvertPersonToResponseWithCountry(response);
         }
+
+        public List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

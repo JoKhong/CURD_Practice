@@ -76,7 +76,73 @@ namespace Services
 
         public List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString)
         {
-            throw new NotImplementedException();
+            List<PersonResponse> allPersons = GetAllPersons();
+            List<PersonResponse> matchingPersons = allPersons;
+
+            if(string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchString))
+                return matchingPersons;
+
+            switch (searchBy) 
+            {
+                case nameof(Person.PersonName):
+                    {
+                        matchingPersons = allPersons.Where( 
+                            aPerson => 
+                            (!string.IsNullOrEmpty(aPerson.PersonName) ? 
+                                aPerson.PersonName.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true )).
+                                ToList();
+                        break;
+                    }
+                case nameof(Person.Email):
+                    {
+                        matchingPersons = allPersons.Where(
+                            aPerson =>
+                            (!string.IsNullOrEmpty(aPerson.Email) ?
+                                aPerson.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).
+                                ToList();
+                        break;
+                    }
+
+                case nameof(Person.Gender):
+                    {
+                        matchingPersons = allPersons.Where(
+                            aPerson =>
+                            (!string.IsNullOrEmpty(aPerson.Gender) ?
+                                aPerson.Gender.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).
+                                ToList();
+                        break;
+                    }
+
+                case nameof(Person.CountryID):
+                    {
+                        matchingPersons = allPersons.Where(
+                            aPerson =>
+                            (!string.IsNullOrEmpty(aPerson.Country) ?
+                                aPerson.Country.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).
+                                ToList();
+                        break;
+                    }
+
+                case nameof(Person.DateOfBirth):
+                    {
+                        matchingPersons = allPersons.Where(
+                            aPerson =>
+                            (aPerson.DateOfBirth != null) ?
+                                aPerson.DateOfBirth.Value.ToString("dd MMMM yyyy").
+                                Contains(searchString, StringComparison.OrdinalIgnoreCase) : true ).
+                                ToList();
+                        break;
+                    }
+
+                    default:
+                    {
+                        matchingPersons = allPersons;
+                        break;
+                    }
+            }
+
+            return matchingPersons;
+
         }
     }
 }

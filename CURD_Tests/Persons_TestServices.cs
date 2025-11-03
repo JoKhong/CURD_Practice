@@ -210,7 +210,7 @@ namespace CURD_Tests
             }
 
             //Assert
-            foreach (PersonResponse item in personAddResponse)
+            foreach (PersonResponse item in requestResponse)
             {
                 Assert.Contains(item, requestResponse);
             }
@@ -254,9 +254,13 @@ namespace CURD_Tests
                 _testOutputHelper.WriteLine(response.ToString());
             }
 
-            string searchString = "An";
+            string searchString = "for";
 
             List<PersonResponse> filteredSearchResponse = personsServices.GetFilteredPersons(nameof(Person.PersonName), searchString);
+            foreach (PersonResponse addRequest in filteredSearchResponse)
+            {
+                addRequest.Country = countryService.GetCountryById(addRequest.CountryId).CountryName;
+            }
 
             _testOutputHelper.WriteLine("Response:");
             foreach (var response in filteredSearchResponse)

@@ -23,7 +23,7 @@ namespace ServiceContracts
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Matching country object</returns>
-        CountryResponse GetCountryById(Guid? id);
+        CountryResponse? GetCountryById(Guid? id);
 
     }
 }

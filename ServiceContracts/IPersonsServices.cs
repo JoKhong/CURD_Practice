@@ -17,5 +17,8 @@ namespace ServiceContracts
         /// </summary>
         /// <returns></returns>
         List<PersonResponse> GetAllPersons();
+
+        PersonResponse? GetPersonById(Guid? id);
+
     }
 }

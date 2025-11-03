@@ -55,7 +55,7 @@ namespace Services
             return _countries.Select(country => country.ToCountryResponse()).ToList();
         }
 
-        public CountryResponse GetCountryById(Guid? id)
+        public CountryResponse? GetCountryById(Guid? id)
         {
             if(id == null)
                 return null;

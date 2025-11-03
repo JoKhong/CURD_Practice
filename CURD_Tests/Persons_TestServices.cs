@@ -14,6 +14,7 @@ namespace CURD_Tests
         {
             var services = new ServiceCollection();
             services.AddScoped<IPersonsServices, PersonServices>();
+            services.AddScoped<ICountriesService, CountryServices>();
 
             _provider = services.BuildServiceProvider();
         }
@@ -121,9 +122,9 @@ namespace CURD_Tests
 
             List<PersonAddRequest> addRequests = new List<PersonAddRequest>() 
             {
-                new PersonAddRequest() {PersonName = "Anya"},
-                new PersonAddRequest() {PersonName = "Loid"},
-                new PersonAddRequest() {PersonName = "Yor"},
+                new PersonAddRequest() {PersonName = "Anya", Email = "Anya@Forger.com"},
+                new PersonAddRequest() {PersonName = "Loid", Email = "Loid@Forger.com"},
+                new PersonAddRequest() {PersonName = "Yor", Email = "Yor@Forger.com"},
             };
 
             foreach (PersonAddRequest addRequest in addRequests)
@@ -141,8 +142,59 @@ namespace CURD_Tests
 
         #endregion
 
+        #region GetPersonById
+        [Fact]
+        public void GetPersonById_ValidId()
+        {
+            var personsService = _provider.GetService<IPersonsServices>();
+            var countryService = _provider.GetService<ICountriesService>();
 
+            CountryAddRequest countryAddRequest = new CountryAddRequest()
+            {
+                CountryName = "Canada"
+            };
 
+            CountryResponse cuntryAddResponse = countryService.AddCountry(countryAddRequest);
 
+            PersonAddRequest requestParams = new PersonAddRequest()
+            {
+                PersonName = "John",
+                Email = "example@mail.com",
+                DateOfBirth = new DateTime(1995, 01, 01),
+                Gender = SexOptions.Male,
+                CountryID = cuntryAddResponse.CountryId,
+                Address = null,
+                ReceiveNewsLetters = false,
+            };
+
+            PersonResponse response = personsService.AddPerson(requestParams);
+
+            PersonResponse? countryById = personsService.GetPersonById(response.PersonID);
+
+            Assert.Equal(countryById, response);
+        }
+
+        [Fact]
+        public void GetPersonById_InvalidId()
+        {
+            var personsService = _provider.GetService<IPersonsServices>();
+
+            PersonAddRequest requestParams = new PersonAddRequest()
+            {
+                PersonName = "John",
+                Email = "example@mail.com",
+                DateOfBirth = new DateTime(1995, 01, 01),
+                Gender = SexOptions.Male,
+                CountryID = null,
+                Address = null,
+                ReceiveNewsLetters = false,
+            };
+
+            PersonResponse response = personsService.AddPerson(requestParams);
+            PersonResponse? personById = personsService.GetPersonById(Guid.NewGuid());
+
+            Assert.Null(personById);
+        }
+        #endregion
     }
 }

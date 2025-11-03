@@ -2,6 +2,8 @@
 using ServiceContracts;
 using ServiceContracts.DTO;
 
+using Services.Helpers;
+
 namespace Services
 {
     public class PersonServices : IPersonsServices
@@ -29,8 +31,8 @@ namespace Services
             if (addRequest == null)
                 throw new ArgumentNullException();
 
-            if (string.IsNullOrEmpty(addRequest.PersonName))
-                throw new ArgumentException("Person name is null or empty");
+            //Model Validation
+            ValidationHelper.ModelValidation(addRequest);
 
             if(_persons.Where( temp => temp.PersonName == addRequest.PersonName).Count() > 0 )
                 throw new ArgumentException("Duplicate Names");
@@ -55,6 +57,21 @@ namespace Services
         public List<PersonResponse> GetAllPersons()
         {
             return _persons.Select(temp => temp.ToPersonResponse()).ToList();
+        }
+
+        public PersonResponse? GetPersonById(Guid? id)
+        {
+            //throw new NotImplementedException();
+
+            if (id == null)
+                return null;
+
+            Person? response = _persons.Where(temp =>  temp.PersonID == id).FirstOrDefault();
+
+            if (response == null)
+                return null;
+
+            return ConvertPersonToResponseWithCountry(response);
         }
     }
 }

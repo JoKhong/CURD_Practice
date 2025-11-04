@@ -103,7 +103,7 @@ namespace CURD_Practice.Controllers
             return View(updateRequest);
         }
 
-        [Route("[action]")]
+        [Route("[action]/{personId}")]
         [HttpPost]
         public IActionResult Edit(PersonUpdateRequest upDateRequest)
         {
@@ -119,5 +119,43 @@ namespace CURD_Practice.Controllers
             return RedirectToAction("Index", "Persons");
         }
 
+        [Route("[action]/{personId}")]
+        [HttpGet]
+        public IActionResult Delete(Guid personId)
+        {
+            PersonResponse personById = _personsServices.GetPersonById(personId);
+
+            if (personById == null)
+                return RedirectToAction("Index", "Persons");
+
+            PersonUpdateRequest updateRequest = personById.ToPersonUpdateRequest();
+
+            IEnumerable<SelectListItem> selectCountires = _countratesServices.GetAllCountries().
+                Select(aCountry => new SelectListItem()
+                {
+                    Text = aCountry.CountryName,
+                    Value = aCountry.CountryId.ToString()
+                });
+
+            ViewBag.Countries = selectCountires;
+
+            return View(updateRequest);
+        }
+
+        [Route("[action]/{personId}")]
+        [HttpPost]
+        public IActionResult Delete(PersonUpdateRequest upDateRequest)
+        {
+            PersonResponse? personResponse = _personsServices.GetPersonById(upDateRequest.PersonId);
+            if (personResponse == null)
+                return RedirectToAction("Index", "Persons");
+
+            _personsServices.DeletePerson(upDateRequest.PersonId);
+            return RedirectToAction("Index", "Persons");
+        }
+
     }
+
+
+
 }

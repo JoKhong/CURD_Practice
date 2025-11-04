@@ -1,0 +1,63 @@
+﻿@model PersonUpdateRequest;
+
+@{
+	ViewBag.Title = "Edit Person";
+}
+
+<a asp-controller="Persons" asp-action="Index" class="link-hover">Back to Persons List</a>
+<h2>Edit Person</h2>
+
+<div class="w-50">
+	<form asp-controller="Persons" asp-action="Delete" method="post">
+
+		<input type="hidden" asp-for="PersonId" />
+		<input type="hidden" asp-for="Email" />
+		<input type="hidden" asp-for="DateOfBirth" />
+		<input type="hidden" asp-for="Gender" />
+		<input type="hidden" asp-for="Country" />
+		<input type="hidden" asp-for="Address" />
+		<input type="hidden" asp-for="ReceiveNewsLetters" />
+
+		@*PersonName*@
+		<div class="form-field flex">
+			<div class="w-25">
+				<label asp-for="PersonName" class="form-label pt">Person Name</label>
+			</div>
+			<div class="flex-1">
+				<input asp-for="PersonName" class="form-input" />
+				<span asp-validation-for="PersonName" class="text-red"></span>
+			</div>
+		</div>
+
+		@*Submit*@
+		<div class="form-field flex">
+			<div class="w-25">
+			</div>
+			<div class="flex-1">
+				<button class="button button-green-back">Delete</button>
+
+				<div asp-validation-summary="All" class="text-red"></div>
+
+				@if (ViewBag.Erros != null)
+				{
+					<div class="text-red ml">
+						<ul>
+							@foreach (string error in ViewBag.Errors)
+							{
+								<li class="ml">@error</li>
+							}
+						</ul>
+					</div>
+				}
+
+			</div>
+		</div>
+
+	</form>
+</div>
+
+@section scripts {
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" asp-fallback-test="window.jQuery" asp-fallback-src="~/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.4/jquery.validate.min.js" asp-fallback-test="window.jQuery.validator" asp-fallback-src="~/jquery.validate.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js" asp-fallback-test="window.jQuery.validator.unobstrusive" asp-fallback-src="~/jquery.validate.unobtrusive.min.js"></script>
+}

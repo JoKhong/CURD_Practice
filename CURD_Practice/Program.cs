@@ -1,7 +1,6 @@
 using Services;
 using ServiceContracts;
 
-
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
@@ -11,7 +10,11 @@ builder.Services.AddTransient<ICountriesService>( provider =>
 {
     return new CountryServices(true);
 });
-builder.Services.AddTransient<IPersonsServices, PersonServices>();
+
+builder.Services.AddTransient<IPersonsServices>( provider =>
+{
+    return new PersonServices(true);
+});
 
 //Optional, For Options
 //builder.Services.Configure<TradingOptions>(builder.Configuration.GetSection(nameof(TradingOptions)));

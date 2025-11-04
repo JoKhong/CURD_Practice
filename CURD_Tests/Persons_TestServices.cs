@@ -17,7 +17,10 @@ namespace CURD_Tests
         public Persons_TestServices(ITestOutputHelper testOutputHelper)
         {
             var services = new ServiceCollection();
-            services.AddScoped<IPersonsServices, PersonServices>();
+            services.AddScoped<IPersonsServices>( provider => 
+            {
+                return new PersonServices(false);
+            });
             
             services.AddScoped<ICountriesService>( provider => 
             {

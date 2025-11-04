@@ -3,7 +3,40 @@
 }
 @model IEnumerable<PersonResponse> ;
 
+<form action="~/persons/index" method="get">
+
 <h1>Persons</h1>
+
+<div class="box flex ">
+
+	<div class="flex-1">
+		<select class="form-input" name="searchBy">
+			@foreach (var field in ViewBag.SearchFields)
+			{
+					if (field.Key == ViewBag.CurrentSearchField)
+					{
+						<option value="@field.Key" selected="selected">@field.Value</option>
+					}
+					else
+					{
+						<option value="@field.Key">@field.Value</option>
+					}
+				}
+		</select>
+	</div>
+
+	<div class="flex-1">
+		<input type="search" id="search" class="form-input" placeholder="Search" 
+		name="searchString" 
+		value="@ViewBag.CurrentSearchValue"/>
+	</div>
+
+	<div class="flex-1">
+		<button class="button-blue-back">Search</button>
+		<a href="~/persons/index" class="link-hover">Clear all</a>
+	</div>
+
+</div>
 
 <table class="table w-100 mt">
 	<thead>
@@ -15,7 +48,7 @@
 			<th>Gender</th>
 			<th>Country</th>
 			<th>Address</th>
-			<th>News Letter</th>
+			<th>Get News Letter</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -34,3 +67,5 @@
 		}
 	</tbody>
 </table>
+
+</form>

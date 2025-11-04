@@ -99,7 +99,7 @@ namespace Services
 
             switch (searchBy) 
             {
-                case nameof(Person.PersonName):
+                case nameof(PersonResponse.PersonName):
                     {
                         matchingPersons = allPersons.Where( 
                             aPerson => 
@@ -108,7 +108,7 @@ namespace Services
                                 ToList();
                         break;
                     }
-                case nameof(Person.Email):
+                case nameof(PersonResponse.Email):
                     {
                         matchingPersons = allPersons.Where(
                             aPerson =>
@@ -118,17 +118,17 @@ namespace Services
                         break;
                     }
 
-                case nameof(Person.Gender):
+                case nameof(PersonResponse.Gender):
                     {
                         matchingPersons = allPersons.Where(
                             aPerson =>
                             (!string.IsNullOrEmpty(aPerson.Gender) ?
-                                aPerson.Gender.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).
+                                (aPerson.Gender.ToLower() == searchString.ToLower()) : true)).
                                 ToList();
                         break;
                     }
 
-                case nameof(Person.CountryId):
+                case nameof(PersonResponse.CountryId):
                     {
                         matchingPersons = allPersons.Where(
                             aPerson =>
@@ -138,7 +138,17 @@ namespace Services
                         break;
                     }
 
-                case nameof(Person.DateOfBirth):
+                case nameof(PersonResponse.Country):
+                    {
+                        matchingPersons = allPersons.Where(
+                            aPerson =>
+                            (!string.IsNullOrEmpty(aPerson.Country) ?
+                                aPerson.Country.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).
+                                ToList();
+                        break;
+                    }
+
+                case nameof(PersonResponse.DateOfBirth):
                     {
                         matchingPersons = allPersons.Where(
                             aPerson =>
@@ -149,7 +159,7 @@ namespace Services
                         break;
                     }
 
-                    default:
+                default:
                     {
                         matchingPersons = allPersons;
                         break;

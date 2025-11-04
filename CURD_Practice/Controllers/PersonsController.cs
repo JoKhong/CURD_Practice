@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Entities;
+using Microsoft.AspNetCore.Mvc;
 using ServiceContracts;
 using ServiceContracts.DTO;
+using System.Diagnostics.Metrics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CURD_Practice.Controllers
 {
@@ -15,11 +18,25 @@ namespace CURD_Practice.Controllers
 
         [Route("persons/index")]
         [Route("/")]
-        public IActionResult Index()
+        public IActionResult Index(string searchBy, string? searchString)
         {
-            List<PersonResponse> allPersons = _personsServices.GetAllPersons();
+            ViewBag.SearchFields = new Dictionary<string, string>()
+            {
+                { nameof(PersonResponse.PersonName), "Person Name"},
+                { nameof(PersonResponse.Email), "Email"},
+                { nameof(PersonResponse.DateOfBirth), "Date of Birth"},
+                { nameof(PersonResponse.Age), "Age"},
+                { nameof(PersonResponse.Gender), "Gender"},
+                { nameof(PersonResponse.Country), "Country"},
+                { nameof(PersonResponse.Address), "Address"},
+            };
 
-            return View(allPersons);
+            List <PersonResponse> responsePersos = _personsServices.GetFilteredPersons(searchBy, searchString);
+            ViewBag.CurrentSearchBy = searchBy;
+            ViewBag.CurrentSearchString = searchString;
+
+
+            return View(responsePersos);
         }
     }
 }

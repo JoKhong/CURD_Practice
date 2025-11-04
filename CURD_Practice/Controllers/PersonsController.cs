@@ -56,5 +56,23 @@ namespace CURD_Practice.Controllers
             return View();
         }
 
+        [Route("persons/create")]
+        [HttpPost]
+        public IActionResult Create(PersonAddRequest addRequest)
+        {
+            ViewBag.Countries = _countratesServices.GetAllCountries();
+
+            if (!ModelState.IsValid) {
+
+                ViewBag.Countries = _countratesServices.GetAllCountries();
+                ViewBag.Errors = ModelState.Values.SelectMany( v => v.Errors ).Select(e => e.ErrorMessage).ToList();
+                return View();
+            }
+
+            _personsServices.AddPerson(addRequest);
+
+            return RedirectToAction("Index", "Persons");
+        }
+
     }
 }

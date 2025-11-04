@@ -6,12 +6,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
 //Optional, For Dependency Injection
-builder.Services.AddTransient<ICountriesService>( provider =>
+builder.Services.AddSingleton<ICountriesService>( provider =>
 {
     return new CountryServices(true);
 });
 
-builder.Services.AddTransient<IPersonsServices>( provider =>
+builder.Services.AddSingleton<IPersonsServices>( provider =>
 {
     return new PersonServices(true);
 });

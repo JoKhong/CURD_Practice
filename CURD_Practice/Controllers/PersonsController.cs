@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ServiceContracts;
 using ServiceContracts.DTO;
+using ServiceContracts.Enums;
 using System.Diagnostics.Metrics;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -18,8 +19,9 @@ namespace CURD_Practice.Controllers
 
         [Route("persons/index")]
         [Route("/")]
-        public IActionResult Index(string searchBy, string? searchString)
+        public IActionResult Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.PersonName), SortOrderOptions sortOrder = SortOrderOptions.ASC)
         {
+            //Searching
             ViewBag.SearchFields = new Dictionary<string, string>()
             {
                 { nameof(PersonResponse.PersonName), "Person Name"},
@@ -31,12 +33,16 @@ namespace CURD_Practice.Controllers
                 { nameof(PersonResponse.Address), "Address"},
             };
 
-            List <PersonResponse> responsePersos = _personsServices.GetFilteredPersons(searchBy, searchString);
+            List <PersonResponse> responsePersons = _personsServices.GetFilteredPersons(searchBy, searchString);
             ViewBag.CurrentSearchBy = searchBy;
             ViewBag.CurrentSearchString = searchString;
 
+            //Sorting
+            List<PersonResponse> sortedPersons = _personsServices.GetSortedPersons(responsePersons, sortBy, sortOrder);
+            ViewBag.CurrentSortBy = sortBy;
+            ViewBag.CurrentSortOrder = sortOrder.ToString();
 
-            return View(responsePersos);
+            return View(sortedPersons);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace ServiceContracts.Enums
 {
     public enum SortOrderOptions
     {
-        AES,
+        ASC,
         DESC
     }
 }

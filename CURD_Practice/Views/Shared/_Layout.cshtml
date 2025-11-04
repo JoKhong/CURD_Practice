@@ -11,10 +11,12 @@
 <body>
     <div class="container">
         <div class="navbar">
-            <div class="navbar-brand">CRUD Demo</div>
+            <div class="navbar-brand">CRUD Demo
+                @* <img src="~/logo.png" width="25px" asp-append-version="true" /> *@
+            </div>
             <ul>
                 <li>
-                    <a href="~/persons/index">Persons</a>
+                    <a asp-controller="Persons" asp-action="Index">Persons</a>
                 </li>
             </ul>
         </div>
@@ -23,5 +25,7 @@
             @RenderBody()
         </div>
     </div>
+
+    @RenderSection("scripts", required:false)
 </body>
 </html>

@@ -19,7 +19,11 @@ namespace ServiceContracts.DTO
         public string? Email { get; set; }
         [DataType(DataType.Date)]
         public DateTime? DateOfBirth { get; set; }
+
+        [Required(ErrorMessage = "Please select a Sex")]
         public SexOptions? Gender { get; set; }
+
+        [Required(ErrorMessage = "Please select a Country")]
         public Guid? CountryId { get; set; }
         public string? Country {  get; set; }
         public string? Address { get; set; }

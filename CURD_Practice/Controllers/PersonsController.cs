@@ -1,8 +1,10 @@
 ﻿using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
+using System.Collections;
 using System.Diagnostics.Metrics;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -51,7 +53,14 @@ namespace CURD_Practice.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ViewBag.Countries = _countratesServices.GetAllCountries();
+            IEnumerable<SelectListItem> selectCountires = _countratesServices.GetAllCountries().
+                Select(aCountry => new SelectListItem() 
+                { 
+                    Text = aCountry.CountryName, 
+                    Value = aCountry.CountryId.ToString() 
+                });
+
+            ViewBag.Countries = selectCountires;
 
             return View();
         }

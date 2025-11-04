@@ -19,7 +19,7 @@ namespace ServiceContracts.DTO
         
         public DateTime? DateOfBirth { get; set; }
         public SexOptions? Gender { get; set; }
-        public Guid? CountryID { get; set; }
+        public Guid? CountryId { get; set; }
         public string? Country {  get; set; }
         public string? Address { get; set; }
         public bool ReceiveNewsLetters { get; set; }
@@ -32,7 +32,7 @@ namespace ServiceContracts.DTO
                 Email = Email,
                 DateOfBirth = DateOfBirth,
                 Gender = Gender.ToString(),
-                CountryId = CountryID,
+                CountryId = CountryId,
                 Address = Address,
                 ReceiveNewsLetters = ReceiveNewsLetters
             };

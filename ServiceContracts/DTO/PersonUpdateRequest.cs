@@ -2,7 +2,6 @@
 using ServiceContracts.Enums;
 using System.ComponentModel.DataAnnotations;
 
-
 namespace ServiceContracts.DTO
 {
     public class PersonUpdateRequest

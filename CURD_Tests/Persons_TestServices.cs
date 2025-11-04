@@ -100,7 +100,7 @@ namespace CURD_Tests
                 Email = "example@mail.com",
                 DateOfBirth = new DateTime(1995, 01, 01),
                 Gender = SexOptions.Male,
-                CountryID = null,
+                CountryId = null,
                 Address = null,
                 ReceiveNewsLetters = false,
             };
@@ -190,10 +190,10 @@ namespace CURD_Tests
             List<PersonResponse> personAddResponse = new List<PersonResponse>();
             List<PersonAddRequest> personAddRequest = new List<PersonAddRequest>()
             {
-                new PersonAddRequest() {PersonName = "Anya", Email = "Anya@Forger.com", Gender = SexOptions.Female, CountryID = countryResponse2.CountryId},
-                new PersonAddRequest() {PersonName = "Loid", Email = "Loid@Forger.com", Gender = SexOptions.Male, CountryID = countryResponse1.CountryId},
-                new PersonAddRequest() {PersonName = "Yor", Email = "Yor@Forger.com", Gender = SexOptions.Female, CountryID = countryResponse2.CountryId},
-                new PersonAddRequest() {PersonName = "Dond", Email = "Bond@Forger.com", Gender = SexOptions.Male, CountryID = countryResponse2.CountryId}
+                new PersonAddRequest() {PersonName = "Anya", Email = "Anya@Forger.com", Gender = SexOptions.Female, CountryId = countryResponse2.CountryId},
+                new PersonAddRequest() {PersonName = "Loid", Email = "Loid@Forger.com", Gender = SexOptions.Male, CountryId = countryResponse1.CountryId},
+                new PersonAddRequest() {PersonName = "Yor", Email = "Yor@Forger.com", Gender = SexOptions.Female, CountryId = countryResponse2.CountryId},
+                new PersonAddRequest() {PersonName = "Dond", Email = "Bond@Forger.com", Gender = SexOptions.Male, CountryId = countryResponse2.CountryId}
             };
             foreach (PersonAddRequest addRequest in personAddRequest)
             {
@@ -243,10 +243,10 @@ namespace CURD_Tests
             List<PersonResponse> personAddResponse = new List<PersonResponse>();
             List<PersonAddRequest> personAddRequest = new List<PersonAddRequest>()
             {
-                new PersonAddRequest() {PersonName = "Anya Forger", Email = "Anya@Forger.com", Gender = SexOptions.Female, CountryID = countryResponse2.CountryId},
-                new PersonAddRequest() {PersonName = "Loid Forger", Email = "Loid@Forger.com", Gender = SexOptions.Male, CountryID = countryResponse1.CountryId},
-                new PersonAddRequest() {PersonName = "Yor Forger", Email = "Yor@Forger.com", Gender = SexOptions.Female, CountryID = countryResponse2.CountryId},
-                new PersonAddRequest() {PersonName = "Dond", Email = "Bond@Forger.com", Gender = SexOptions.Male, CountryID = countryResponse2.CountryId}
+                new PersonAddRequest() {PersonName = "Anya Forger", Email = "Anya@Forger.com", Gender = SexOptions.Female, CountryId = countryResponse2.CountryId},
+                new PersonAddRequest() {PersonName = "Loid Forger", Email = "Loid@Forger.com", Gender = SexOptions.Male, CountryId = countryResponse1.CountryId},
+                new PersonAddRequest() {PersonName = "Yor Forger", Email = "Yor@Forger.com", Gender = SexOptions.Female, CountryId = countryResponse2.CountryId},
+                new PersonAddRequest() {PersonName = "Dond", Email = "Bond@Forger.com", Gender = SexOptions.Male, CountryId = countryResponse2.CountryId}
             };
             foreach (PersonAddRequest addRequest in personAddRequest)
             {
@@ -312,10 +312,10 @@ namespace CURD_Tests
             List<PersonResponse> personAddResponse = new List<PersonResponse>();
             List<PersonAddRequest> personAddRequest = new List<PersonAddRequest>()
             {
-                new PersonAddRequest() {PersonName = "Anya Forger", Email = "Anya@Forger.com", Gender = SexOptions.Female, CountryID = countryResponse2.CountryId},
-                new PersonAddRequest() {PersonName = "Loid Forger", Email = "Loid@Forger.com", Gender = SexOptions.Male, CountryID = countryResponse1.CountryId},
-                new PersonAddRequest() {PersonName = "Yor Forger", Email = "Yor@Forger.com", Gender = SexOptions.Female, CountryID = countryResponse2.CountryId},
-                new PersonAddRequest() {PersonName = "Dond", Email = "Bond@Forger.com", Gender = SexOptions.Male, CountryID = countryResponse2.CountryId}
+                new PersonAddRequest() {PersonName = "Anya Forger", Email = "Anya@Forger.com", Gender = SexOptions.Female, CountryId = countryResponse2.CountryId},
+                new PersonAddRequest() {PersonName = "Loid Forger", Email = "Loid@Forger.com", Gender = SexOptions.Male, CountryId = countryResponse1.CountryId},
+                new PersonAddRequest() {PersonName = "Yor Forger", Email = "Yor@Forger.com", Gender = SexOptions.Female, CountryId = countryResponse2.CountryId},
+                new PersonAddRequest() {PersonName = "Dond", Email = "Bond@Forger.com", Gender = SexOptions.Male, CountryId = countryResponse2.CountryId}
             };
             foreach (PersonAddRequest addRequest in personAddRequest)
             {
@@ -373,7 +373,7 @@ namespace CURD_Tests
                 Email = "example@mail.com",
                 DateOfBirth = new DateTime(1995, 01, 01),
                 Gender = SexOptions.Male,
-                CountryID = cuntryAddResponse.CountryId,
+                CountryId = cuntryAddResponse.CountryId,
                 Address = null,
                 ReceiveNewsLetters = false,
             };
@@ -396,7 +396,7 @@ namespace CURD_Tests
                 Email = "example@mail.com",
                 DateOfBirth = new DateTime(1995, 01, 01),
                 Gender = SexOptions.Male,
-                CountryID = null,
+                CountryId = null,
                 Address = null,
                 ReceiveNewsLetters = false,
             };
@@ -457,7 +457,7 @@ namespace CURD_Tests
                 Email = "example@mail.com",
                 DateOfBirth = new DateTime(1995, 01, 01),
                 Gender = SexOptions.Male,
-                CountryID = cuntryAddResponse.CountryId,
+                CountryId = cuntryAddResponse.CountryId,
                 Address = null,
                 ReceiveNewsLetters = false,
             };
@@ -492,7 +492,7 @@ namespace CURD_Tests
                 Email = "example@mail.com",
                 DateOfBirth = new DateTime(1995, 01, 01),
                 Gender = SexOptions.Male,
-                CountryID = cuntryAddResponse.CountryId,
+                CountryId = cuntryAddResponse.CountryId,
                 Address = null,
                 ReceiveNewsLetters = false,
             };
@@ -533,7 +533,7 @@ namespace CURD_Tests
                 Email = "example@mail.com",
                 DateOfBirth = new DateTime(1995, 01, 01),
                 Gender = SexOptions.Male,
-                CountryID = cuntryAddResponse.CountryId,
+                CountryId = cuntryAddResponse.CountryId,
                 Address = null,
                 ReceiveNewsLetters = false,
             };
@@ -563,7 +563,7 @@ namespace CURD_Tests
                 Email = "example@mail.com",
                 DateOfBirth = new DateTime(1995, 01, 01),
                 Gender = SexOptions.Male,
-                CountryID = cuntryAddResponse.CountryId,
+                CountryId = cuntryAddResponse.CountryId,
                 Address = null,
                 ReceiveNewsLetters = false,
             };

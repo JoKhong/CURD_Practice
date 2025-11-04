@@ -11,10 +11,12 @@ namespace CURD_Practice.Controllers
     public class PersonsController : Controller
     {
         private readonly IPersonsServices _personsServices;
+        private readonly ICountriesService _countratesServices;
 
-        public PersonsController(IPersonsServices personsServices)
+        public PersonsController(IPersonsServices personsServices, ICountriesService countratesServices)
         {
             _personsServices = personsServices;
+            _countratesServices = countratesServices;
         }
 
         [Route("persons/index")]
@@ -44,5 +46,15 @@ namespace CURD_Practice.Controllers
 
             return View(sortedPersons);
         }
+
+        [Route("persons/create")]
+        [HttpGet]
+        public IActionResult Create()
+        {
+            ViewBag.Countries = _countratesServices.GetAllCountries();
+
+            return View();
+        }
+
     }
 }

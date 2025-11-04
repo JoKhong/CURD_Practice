@@ -1,14 +1,16 @@
-﻿@model PersonAddRequest;
+﻿@model PersonUpdateRequest;
 
 @{
-	ViewBag.Title = "Create Person";
+	ViewBag.Title = "Edit Person";
 }
 
 <a asp-controller="Persons" asp-action="Index" class="link-hover">Back to Persons List</a>
-<h2>Create Person</h2>
+<h2>Edit Person</h2>
 
 <div class="w-50">
 	<form asp-controller="Persons" asp-action="Create" method="post">
+
+		<input type ="hidden" asp-for="PersonId"/>
 
 		@*PersonName*@
 		<div class="form-field flex">
@@ -16,7 +18,7 @@
 				<label asp-for="PersonName" class="form-label pt">Person Name</label>
 			</div>
 			<div class="flex-1">
-				<input  asp-for="PersonName" class="form-input" />
+				<input asp-for="PersonName" class="form-input" />
 				<span asp-validation-for="PersonName" class="text-red"></span>
 			</div>
 		</div>
@@ -52,7 +54,7 @@
 				@{
 					string[] genders = (string[])Enum.GetNames(typeof(SexOptions));
 				}
-				@foreach( string gender in genders)
+				@foreach (string gender in genders)
 				{
 					<input asp-for="Gender" type="radio" value="@gender" />
 					<label asp-for="@gender" class="ml">@gender</label>
@@ -101,11 +103,11 @@
 			<div class="w-25">
 			</div>
 			<div class="flex-1">
-				<button class="button button-green-back">Submit</button>
+				<button class="button button-green-back">Update</button>
 
 				<div asp-validation-summary="All" class="text-red"></div>
 
-				@if(ViewBag.Erros != null)
+				@if (ViewBag.Erros != null)
 				{
 					<div class="text-red ml">
 						<ul>

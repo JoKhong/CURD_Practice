@@ -4,12 +4,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
-using System.Collections;
-using System.Diagnostics.Metrics;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CURD_Practice.Controllers
 {
+    [Route("[controller]")]
+
     public class PersonsController : Controller
     {
         private readonly IPersonsServices _personsServices;
@@ -21,7 +20,7 @@ namespace CURD_Practice.Controllers
             _countratesServices = countratesServices;
         }
 
-        [Route("persons/index")]
+        [Route("[action]")]
         [Route("/")]
         public IActionResult Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.PersonName), SortOrderOptions sortOrder = SortOrderOptions.ASC)
         {
@@ -49,7 +48,7 @@ namespace CURD_Practice.Controllers
             return View(sortedPersons);
         }
 
-        [Route("persons/create")]
+        [Route("[action]")]
         [HttpGet]
         public IActionResult Create()
         {
@@ -65,12 +64,10 @@ namespace CURD_Practice.Controllers
             return View();
         }
 
-        [Route("persons/create")]
+        [Route("[action]")]
         [HttpPost]
         public IActionResult Create(PersonAddRequest addRequest)
         {
-            ViewBag.Countries = _countratesServices.GetAllCountries();
-
             if (!ModelState.IsValid) {
 
                 ViewBag.Countries = _countratesServices.GetAllCountries();
@@ -79,6 +76,45 @@ namespace CURD_Practice.Controllers
             }
 
             _personsServices.AddPerson(addRequest);
+
+            return RedirectToAction("Index", "Persons");
+        }
+
+        [Route("[action]/{personId}")]
+        [HttpGet]
+        public IActionResult Edit(Guid personId)
+        {
+            PersonResponse personById = _personsServices.GetPersonById(personId);
+
+            if(personById == null)
+                return RedirectToAction("Index", "Persons");
+
+            PersonUpdateRequest updateRequest = personById.ToPersonUpdateRequest();
+
+            IEnumerable<SelectListItem> selectCountires = _countratesServices.GetAllCountries().
+                Select(aCountry => new SelectListItem()
+                {
+                    Text = aCountry.CountryName,
+                    Value = aCountry.CountryId.ToString()
+                });
+
+            ViewBag.Countries = selectCountires;
+
+            return View(updateRequest);
+        }
+
+        [Route("[action]")]
+        [HttpPost]
+        public IActionResult Edit(PersonUpdateRequest upDateRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Countries = _countratesServices.GetAllCountries();
+                ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return View();
+            }
+
+            _personsServices.UpdatePerson(upDateRequest);
 
             return RedirectToAction("Index", "Persons");
         }

@@ -100,8 +100,8 @@ namespace CURD_Tests
                 Email = "example@mail.com",
                 DateOfBirth = new DateTime(1995, 01, 01),
                 Gender = SexOptions.Male,
-                CountryId = null,
-                Address = null,
+                CountryId = Guid.NewGuid(),
+                Address = "TestAdd",
                 ReceiveNewsLetters = false,
             };
 
@@ -135,9 +135,21 @@ namespace CURD_Tests
 
             List<PersonAddRequest> addRequests = new List<PersonAddRequest>() 
             {
-                new PersonAddRequest() {PersonName = "Anya", Email = "Anya@Forger.com"},
-                new PersonAddRequest() {PersonName = "Loid", Email = "Loid@Forger.com"},
-                new PersonAddRequest() {PersonName = "Yor", Email = "Yor@Forger.com"},
+                new PersonAddRequest() {PersonName = "Anya", Email = "Anya@Forger.com",  DateOfBirth = new DateTime(1995, 01, 01),
+                Gender = SexOptions.Female,
+                CountryId = Guid.NewGuid(),
+                Address = null,
+                ReceiveNewsLetters = false},
+                new PersonAddRequest() {PersonName = "Loid", Email = "Loid@Forger.com",  DateOfBirth = new DateTime(1995, 01, 01),
+                Gender = SexOptions.Male,
+                CountryId = Guid.NewGuid(),
+                Address = null,
+                ReceiveNewsLetters = false,},
+                new PersonAddRequest() {PersonName = "Yor", Email = "Yor@Forger.com",  DateOfBirth = new DateTime(1995, 01, 01),
+                Gender = SexOptions.Female,
+                CountryId = Guid.NewGuid(),
+                Address = null,
+                ReceiveNewsLetters = false,},
             };
 
             foreach (PersonAddRequest addRequest in addRequests)
@@ -396,9 +408,9 @@ namespace CURD_Tests
                 Email = "example@mail.com",
                 DateOfBirth = new DateTime(1995, 01, 01),
                 Gender = SexOptions.Male,
-                CountryId = null,
-                Address = null,
-                ReceiveNewsLetters = false,
+                CountryId = Guid.NewGuid(),
+                Address = "TestAddRess",
+                ReceiveNewsLetters = true,
             };
 
             PersonResponse response = personsService.AddPerson(requestParams);

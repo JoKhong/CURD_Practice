@@ -1,4 +1,6 @@
-﻿@{
+﻿@model PersonAddRequest;
+
+@{
 	ViewBag.Titel = "Create Person";
 }
 
@@ -14,7 +16,7 @@
 				<label for="PersonName" class="form-label pt">Person Name</label>
 			</div>
 			<div class="flex-1">
-				<input type="text" id="PersonName" name="PersonName" class="form-input" />
+				<input  asp-for="PersonName" class="form-input" />
 			</div>
 		</div>
 
@@ -24,7 +26,7 @@
 				<label for="Email" class="form-label pt">Email</label>
 			</div>
 			<div class="flex-1">
-				<input type="email" id="Email" name="Email" class="form-input" />
+				<input asp-for="Email" type="email" class="form-input" />
 			</div>
 		</div>
 
@@ -34,7 +36,7 @@
 				<label for="DateOfBirth" class="form-label pt">Date of Birth</label>
 			</div>
 			<div class="flex-1">
-				<input type="date" id="DateOfBirth" name="DateOfBirth" class="form-input" />
+				<input asp-for="DateOfBirth" type="date" class="form-input" />
 			</div>
 		</div>
 
@@ -44,11 +46,14 @@
 				<label class="form-label">Gender</label>
 			</div>
 			<div class="flex-1">
-				<input type="radio" id="Male" name="Gender" value="Male" />
-				<label for="Male" class="ml">Male</label>
-
-				<input type="radio" id="Female" name="Gender" value="Female" class="ml" />
-				<label for="Female" class="ml">Female</label>
+				@{
+					string[] genders = (string[])Enum.GetNames(typeof(SexOptions));
+				}
+				@foreach( string gender in genders)
+				{
+					<input asp-for="Gender" type="radio" value="@gender" />
+					<label for="@gender" class="ml">@gender</label>
+				}
 			</div>
 		</div>
 
@@ -58,7 +63,7 @@
 				<label class="form-label" for="CountryId">Country</label>
 			</div>
 			<div class="flex-1">
-				<select name="CountryId" id="CountryId" class="form-input">
+				<select asp-for="CountryId" class="form-input">
 					<option value="">Please Select</option>
 					@foreach (CountryResponse country in ViewBag.Countries)
 					{
@@ -74,7 +79,7 @@
 				<label for="Address" class="form-label pt">Address</label>
 			</div>
 			<div class="flex-1">
-				<textarea id="Address" name="Address" class="form-input"></textarea>
+				<textarea asp-for="Address" class="form-input"></textarea>
 			</div>
 		</div>
 
@@ -84,7 +89,7 @@
 				<label for="ReceiveNewsLetters" class="form-label">Receive News Letters</label>
 			</div>
 			<div class="flex-1">
-				<input type="checkbox" name="ReceiveNewsLetters" id="ReceiveNewsLetters" value="true" />
+				<input asp-for="ReceiveNewsLetters" type="checkbox" value="true" />
 			</div>
 		</div>
 

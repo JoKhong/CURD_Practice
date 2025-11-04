@@ -1,10 +1,17 @@
+using Services;
+using ServiceContracts;
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
 //Optional, For Dependency Injection
-//builder.Services.AddTransient<IFinnhubService, FinnhubService>();
+builder.Services.AddTransient<ICountriesService>( provider =>
+{
+    return new CountryServices(true);
+});
+builder.Services.AddTransient<IPersonsServices, PersonServices>();
 
 //Optional, For Options
 //builder.Services.Configure<TradingOptions>(builder.Configuration.GetSection(nameof(TradingOptions)));

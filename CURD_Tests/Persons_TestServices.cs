@@ -4,6 +4,7 @@ using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using Services;
+using System.Reflection.Metadata.Ecma335;
 using Xunit.Abstractions;
 
 namespace CURD_Tests
@@ -17,7 +18,11 @@ namespace CURD_Tests
         {
             var services = new ServiceCollection();
             services.AddScoped<IPersonsServices, PersonServices>();
-            services.AddScoped<ICountriesService, CountryServices>();
+            
+            services.AddScoped<ICountriesService>( provider => 
+            {
+                return new CountryServices(false);
+            });
 
             _testOutputHelper = testOutputHelper;
 

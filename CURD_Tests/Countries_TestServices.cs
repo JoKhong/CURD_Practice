@@ -12,7 +12,11 @@ namespace CURD_Tests
         public Countries_TestServices()
         {
             var services = new ServiceCollection();
-            services.AddScoped<ICountriesService, CountryServices>();
+          
+            services.AddScoped<ICountriesService>(provider =>
+            {
+                return new CountryServices(false);
+            });
 
             _provider = services.BuildServiceProvider();
         }

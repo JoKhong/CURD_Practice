@@ -14,7 +14,7 @@ namespace Services
         public PersonServices()
         {
             _persons = new List<Person>();
-            _countriesService = new CountryServices();
+            _countriesService = new CountryServices(false);
         }
 
         private PersonResponse ConvertPersonToResponseWithCountry(Person person)

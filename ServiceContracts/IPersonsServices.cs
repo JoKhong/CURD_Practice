@@ -1,6 +1,7 @@
 ﻿using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using System;
+using System.Threading.Tasks;
 
 namespace ServiceContracts
 {
@@ -11,15 +12,15 @@ namespace ServiceContracts
         /// </summary>
         /// <param name="addRequest"></param>
         /// <returns></returns>
-        PersonResponse AddPerson(PersonAddRequest? addRequest);
+        Task<PersonResponse> AddPerson(PersonAddRequest? addRequest);
 
         /// <summary>
         /// Gets all Persons 
         /// </summary>
         /// <returns></returns>
-        List<PersonResponse> GetAllPersons();
+        Task<List<PersonResponse>> GetAllPersons();
 
-        PersonResponse? GetPersonById(Guid? id);
+        Task<PersonResponse?> GetPersonById(Guid? id);
 
         /// <summary>
         /// Get Persons based on search by field and Search name
@@ -27,7 +28,7 @@ namespace ServiceContracts
         /// <param name="searchBy"></param>
         /// <param name="searchString"></param>
         /// <returns>Returns PersonResponse based on searchBy and searchString</returns>
-        List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString);
+        Task<List<PersonResponse>> GetFilteredPersons(string searchBy, string? searchString);
 
         /// <summary>
         /// Returns sorted list of persons
@@ -36,11 +37,11 @@ namespace ServiceContracts
         /// <param name="sortBy"></param>
         /// <param name="sortOrder"></param>
         /// <returns>Returns sorted list of persons</returns>
-        List<PersonResponse> GetSortedPersons(List<PersonResponse> allPersons, string sortBy, SortOrderOptions sortOrder);
+        Task<List<PersonResponse>>  GetSortedPersons(List<PersonResponse> allPersons, string sortBy, SortOrderOptions sortOrder);
 
-        PersonResponse UpdatePerson(PersonUpdateRequest? updateRequest);
+        Task<PersonResponse> UpdatePerson(PersonUpdateRequest? updateRequest);
 
-        bool DeletePerson(Guid? PersonId);
+        Task<bool> DeletePerson(Guid? PersonId);
 
     }
 }

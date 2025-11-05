@@ -1,4 +1,5 @@
 ﻿using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 
@@ -13,7 +14,7 @@ namespace Services
             _db = personsDbContext;
         }
 
-        public CountryResponse AddCountry(CountryAddRequest? AddRequest)
+        public async Task<CountryResponse> AddCountry(CountryAddRequest? AddRequest)
         {
             if (AddRequest == null)
                 throw new ArgumentNullException();
@@ -23,7 +24,7 @@ namespace Services
                 throw new ArgumentException("AddRequest.CountryName is null or empty");
             }
 
-            if (_db.Countries.Count(aCountry => aCountry.CountryName == AddRequest.CountryName) > 0)
+            if (await _db.Countries.CountAsync(aCountry => aCountry.CountryName == AddRequest.CountryName) > 0)
             {
                 throw new ArgumentException("Country already added");
             }
@@ -34,7 +35,7 @@ namespace Services
                 country.CountryId = Guid.NewGuid();
 
                 _db.Countries.Add(country);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
 
                 return country.ToCountryResponse();
             }
@@ -45,22 +46,22 @@ namespace Services
 
         }
 
-        public List<CountryResponse> GetAllCountries()
+        public async Task<List<CountryResponse>> GetAllCountries()
         {
-            return _db.Countries.Select(country => country.ToCountryResponse()).ToList();
+            return await _db.Countries.Select(country => country.ToCountryResponse()).ToListAsync();
         }
 
-        public CountryResponse? GetCountryById(Guid? id)
+        public async Task<CountryResponse?> GetCountryById(Guid? id)
         {
             if(id == null)
                 return null;
 
-            Country? validCountry = _db.Countries.Where( country => country.CountryId == id).FirstOrDefault();
+            Country? validCountry = await _db.Countries.Where( country => country.CountryId == id).FirstAsync();
 
             if (validCountry == null)
                 return null;
 
-            return validCountry.ToCountryResponse();
+            return  validCountry.ToCountryResponse();
         }
     }
 }

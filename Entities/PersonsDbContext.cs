@@ -14,6 +14,10 @@ namespace Entities
         public DbSet<Country> Countries { get; set; }
         public DbSet<Person> Persons { get; set; }
 
+        public PersonsDbContext(DbContextOptions options) : base(options)
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -24,19 +28,17 @@ namespace Entities
             //Seed countires
             try 
             {
-                string countiresJson = File.ReadAllText("countries.json");
-                List<Country> countries = JsonSerializer.Deserialize<List<Country>>(countiresJson);
+                //string countiresJson = File.ReadAllText("countries.json");
+                //List<Country> countries = JsonSerializer.Deserialize<List<Country>>(countiresJson);
 
-                foreach(Country country in countries)
-                    modelBuilder.Entity<Country>().HasData(country);
+                //foreach (Country country in countries)
+                //    modelBuilder.Entity<Country>().HasData(country);
 
+                //string personsJson = File.ReadAllText("persons.json");
+                //List<Person> persons = JsonSerializer.Deserialize<List<Person>>(countiresJson);
 
-                string personsJson = File.ReadAllText("persons.json");
-                List<Person> persons = JsonSerializer.Deserialize<List<Person>>(countiresJson);
-
-                foreach (Person peson in persons)
-                    modelBuilder.Entity<Country>().HasData(peson);
-
+                //foreach (Person peson in persons)
+                //    modelBuilder.Entity<Country>().HasData(peson);
             }
             catch (Exception ex) { }
 

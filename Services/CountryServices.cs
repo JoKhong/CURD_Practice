@@ -6,24 +6,11 @@ namespace Services
 {
     public class CountryServices : ICountriesService
     {
-        private readonly List<Country> _countries;
+        private readonly PersonsDbContext _db;
 
-        public CountryServices(bool initialize)
+        public CountryServices(PersonsDbContext personsDbContext)
         {
-            _countries = new List<Country>();
-
-            if(initialize)
-            {
-                _countries.AddRange(new List<Country>()
-                {
-                    new Country() {  CountryId = Guid.Parse("000C76EB-62E9-4465-96D1-2C41FDB64C3B"), CountryName = "USA" },
-                    new Country() { CountryId = Guid.Parse("32DA506B-3EBA-48A4-BD86-5F93A2E19E3F"), CountryName = "Canada" },
-                    new Country() { CountryId = Guid.Parse("DF7C89CE-3341-4246-84AE-E01AB7BA476E"), CountryName = "UK" },
-                    new Country() { CountryId = Guid.Parse("15889048-AF93-412C-B8F3-22103E943A6D"), CountryName = "India" },
-                    new Country() { CountryId = Guid.Parse("80DF255C-EFE7-49E5-A7F9-C35D7C701CAB"), CountryName = "Australia" }
-                });
-            }
-
+            _db = personsDbContext;
         }
 
         public CountryResponse AddCountry(CountryAddRequest? AddRequest)
@@ -36,23 +23,18 @@ namespace Services
                 throw new ArgumentException("AddRequest.CountryName is null or empty");
             }
 
-            if (_countries.Where(aCountry => aCountry.CountryName == AddRequest.CountryName).Count() > 0)
+            if (_db.Countries.Count(aCountry => aCountry.CountryName == AddRequest.CountryName) > 0)
             {
                 throw new ArgumentException("Country already added");
             }
 
             try 
             {
-                //Country country = new Country
-                //{
-                //    CountryId = Guid.NewGuid(),
-                //    CountryName = AddRequest.CountryName
-                //};
-
                 Country country = AddRequest.ToCountry();
                 country.CountryId = Guid.NewGuid();
 
-                _countries.Add(country);
+                _db.Countries.Add(country);
+                _db.SaveChanges();
 
                 return country.ToCountryResponse();
             }
@@ -65,7 +47,7 @@ namespace Services
 
         public List<CountryResponse> GetAllCountries()
         {
-            return _countries.Select(country => country.ToCountryResponse()).ToList();
+            return _db.Countries.Select(country => country.ToCountryResponse()).ToList();
         }
 
         public CountryResponse? GetCountryById(Guid? id)
@@ -73,7 +55,7 @@ namespace Services
             if(id == null)
                 return null;
 
-            Country? validCountry = _countries.Where( country => country.CountryId == id).FirstOrDefault();
+            Country? validCountry = _db.Countries.Where( country => country.CountryId == id).FirstOrDefault();
 
             if (validCountry == null)
                 return null;

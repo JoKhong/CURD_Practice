@@ -1,3 +1,5 @@
+using Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ServiceContracts;
 using ServiceContracts.DTO;
@@ -11,11 +13,20 @@ namespace CURD_Tests
 
         public Countries_TestServices()
         {
+            string _sqlServer = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=PersonsDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+
             var services = new ServiceCollection();
-          
+
+            services.AddDbContext<PersonsDbContext>(
+            options =>
+            {
+                options.UseSqlServer(_sqlServer);
+            });
+
             services.AddScoped<ICountriesService>(provider =>
             {
-                return new CountryServices(false);
+                PersonsDbContext? dbContext = provider.GetService<PersonsDbContext>();
+                return new CountryServices(dbContext);
             });
 
             _provider = services.BuildServiceProvider();

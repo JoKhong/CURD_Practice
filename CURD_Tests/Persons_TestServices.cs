@@ -6,6 +6,7 @@ using ServiceContracts.Enums;
 using Services;
 using System.Reflection.Metadata.Ecma335;
 using Xunit.Abstractions;
+using Microsoft.EntityFrameworkCore;
 
 namespace CURD_Tests
 {
@@ -16,15 +17,28 @@ namespace CURD_Tests
 
         public Persons_TestServices(ITestOutputHelper testOutputHelper)
         {
+            string _sqlServer = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=PersonsDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+
             var services = new ServiceCollection();
+
+            services.AddDbContext<PersonsDbContext>(
+            options =>
+            {
+                options.UseSqlServer(_sqlServer);
+            });
+
             services.AddScoped<IPersonsServices>( provider => 
             {
-                return new PersonServices(false);
+                PersonsDbContext? dbContext = provider.GetService<PersonsDbContext>();
+                CountryServices countryServices = provider.GetService<CountryServices>();
+
+                return new PersonServices(dbContext, countryServices);
             });
             
             services.AddScoped<ICountriesService>( provider => 
             {
-                return new CountryServices(false);
+                PersonsDbContext? dbContext = provider.GetService<PersonsDbContext>();
+                return new CountryServices(dbContext);
             });
 
             _testOutputHelper = testOutputHelper;

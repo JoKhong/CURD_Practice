@@ -2,32 +2,44 @@ using Entities;
 using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using Services;
-using System;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
-//Optional, For Dependency Injection
-builder.Services.AddSingleton<ICountriesService>( 
-provider =>
-{
-    return new CountryServices(true);
-});
-
-builder.Services.AddSingleton<IPersonsServices>( 
-provider =>
-{
-    return new PersonServices(true);
-});
-
 builder.Services.AddDbContext<PersonsDbContext>(
-options => 
+options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")); 
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+//Optional, For Dependency Injection
+
+//Add Auto, ASP.NET auto covers it
+builder.Services.AddScoped<ICountriesService, CountryServices>();
+builder.Services.AddScoped<IPersonsServices, PersonServices>();
+
+//Add Manual, Useful when constructor has other parameters or want control. 
+//BUT NOT RECOMMENDED
+#region Manual Add Service
+/*
+builder.Services.AddScoped<ICountriesService>(
+provider =>
+{
+    PersonsDbContext? dbContext = provider.GetService<PersonsDbContext>();
+    return new CountryServices(dbContext);
+});
+builder.Services.AddScoped<IPersonsServices>(
+provider =>
+{
+    PersonsDbContext? dbContext = provider.GetService<PersonsDbContext>();
+    CountryServices countryServices = provider.GetService<CountryServices>();
+
+    return new PersonServices(dbContext, countryServices);
+});
+*/
+#endregion
+
 
 //Optional, For Options
 //builder.Services.Configure<TradingOptions>(builder.Configuration.GetSection(nameof(TradingOptions)));

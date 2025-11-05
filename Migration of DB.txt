@@ -1,0 +1,13 @@
+
+
+In Main Project, Right Click and Set as Startup Project
+Install NugetPackage Microsoft.EntityFrameworkCore.Design
+Install NugetPackage Microsoft.EntityFrameworkCore.SqlServer
+
+OnThe Entites Project
+Install NugetPackage Microsoft.EntityFrameworkCore.SqlServer
+Install NugetPackage Microsoft.EntityFrameworkCore.Tools
+
+Open NugetTerminal and select Entity Project
+Add-Migration Initial, (Inital can be another name)
+Update-Database

@@ -27,7 +27,7 @@ namespace ServiceContracts.DTO
         {
             Person person = new Person()
             {
-                PersonID = PersonId,
+                PersonId = PersonId,
                 PersonName = PersonName,
                 Email = Email,
                 DateOfBirth = DateOfBirth,

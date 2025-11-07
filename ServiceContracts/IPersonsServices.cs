@@ -43,5 +43,9 @@ namespace ServiceContracts
 
         Task<bool> DeletePerson(Guid? PersonId);
 
+        Task<MemoryStream> GetPersonsCSV();
+
+        Task<MemoryStream> GetPersonsCSVCustom();
+
     }
 }

@@ -178,6 +178,20 @@ namespace CURD_Practice.Controllers
 
         }
 
+        [Route("[action]")]
+        public async Task<IActionResult> PersonsCsv()
+        {
+            MemoryStream stream =  await _personsServices.GetPersonsCSV();
+            return File(stream, "application/octet-stream", "persons.csv");
+        }
+
+        [Route("[action]")]
+        public async Task<IActionResult> PersonsCsvCustom()
+        {
+            MemoryStream stream = await _personsServices.GetPersonsCSVCustom();
+            return File(stream, "application/octet-stream", "persons.csv");
+        }
+
     }
 
 

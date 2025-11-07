@@ -1,9 +1,13 @@
-﻿using Entities;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using Services.Helpers;
+using System.Globalization;
 
 namespace Services
 {
@@ -268,6 +272,76 @@ namespace Services
             await _db.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<MemoryStream> GetPersonsCSV()
+        {
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+
+            //Get Data
+            List<PersonResponse> response = _db.Persons.Include("Country").Select(person => person.ToPersonResponse()).ToList();
+
+            CsvWriter csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture , leaveOpen:true);
+
+            
+            //Prepare Header
+            csvWriter.WriteHeader<PersonResponse>();
+            csvWriter.NextRecord();
+
+            //Fill in Data
+            await csvWriter.WriteRecordsAsync(response);
+
+            stream.Position = 0;
+            return stream;
+
+        }
+
+        public async Task<MemoryStream> GetPersonsCSVCustom()
+        {
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+
+            //Get Data
+            List<PersonResponse> response = _db.Persons.Include("Country").Select(person => person.ToPersonResponse()).ToList();
+
+            CsvConfiguration csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture);
+            CsvWriter csvWriter = new CsvWriter(writer, csvConfig);
+
+            //PrepareHeader
+            csvWriter.WriteField(nameof(PersonResponse.PersonName));
+            csvWriter.WriteField(nameof(PersonResponse.Email));
+            csvWriter.WriteField(nameof(PersonResponse.DateOfBirth));
+            csvWriter.WriteField(nameof(PersonResponse.Age));
+            csvWriter.WriteField(nameof(PersonResponse.Gender));
+            csvWriter.WriteField(nameof(PersonResponse.Country));
+            csvWriter.WriteField(nameof(PersonResponse.Address));
+            csvWriter.WriteField(nameof(PersonResponse.ReceiveNewsLetters));
+            csvWriter.NextRecord();
+
+            //Fill in Data
+            foreach (PersonResponse person in response) 
+            {
+                csvWriter.WriteField(person.PersonName);
+                csvWriter.WriteField(person.Email);
+
+                if(person.DateOfBirth.HasValue)
+                    csvWriter.WriteField(person.DateOfBirth.Value.ToString("yyyy-MM-dd"));
+                else
+                    csvWriter.WriteField("");
+
+                csvWriter.WriteField(person.Age);
+                csvWriter.WriteField(person.Gender);
+                csvWriter.WriteField(person.Country);
+                csvWriter.WriteField(person.Address);
+                csvWriter.WriteField(person.ReceiveNewsLetters);
+
+                csvWriter.NextRecord();
+                csvWriter.Flush();
+            }
+
+            stream.Position = 0;
+            return stream;
         }
     }
     

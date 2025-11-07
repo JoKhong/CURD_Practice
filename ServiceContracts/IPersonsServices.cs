@@ -46,6 +46,7 @@ namespace ServiceContracts
         Task<MemoryStream> GetPersonsCSV();
 
         Task<MemoryStream> GetPersonsCSVCustom();
+        Task<MemoryStream> GetPersonsExcel();
 
     }
 }

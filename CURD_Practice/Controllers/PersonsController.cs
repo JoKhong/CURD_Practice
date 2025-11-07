@@ -192,6 +192,13 @@ namespace CURD_Practice.Controllers
             return File(stream, "application/octet-stream", "persons.csv");
         }
 
+        [Route("[action]")]
+        public async Task<IActionResult> PersonsExcel()
+        {
+            MemoryStream stream = await _personsServices.GetPersonsExcel();
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "persons.xlsx");
+        }
+
     }
 
 

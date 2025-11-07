@@ -1,9 +1,11 @@
-﻿using Entities;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Rotativa.AspNetCore;
+using Microsoft.Data.SqlClient;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace CURD_Practice.Controllers
@@ -159,6 +161,21 @@ namespace CURD_Practice.Controllers
 
             await _personsServices.DeletePerson(upDateRequest.PersonId);
             return RedirectToAction("Index", "Persons");
+        }
+
+        [Route("[action]")]
+        public async Task<IActionResult> PersonsPdf() 
+        {
+            List<PersonResponse> responsePersons = await _personsServices.GetAllPersons();
+
+            ViewAsPdf viewAsPdf = new ViewAsPdf("PersonsPdf", responsePersons, ViewData)
+            {
+                PageMargins = new Rotativa.AspNetCore.Options.Margins(20, 20, 20, 20),
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
+            };
+
+            return viewAsPdf;
+
         }
 
     }

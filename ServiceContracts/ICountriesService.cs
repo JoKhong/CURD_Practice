@@ -3,6 +3,9 @@ using Entities;
 using ServiceContracts.Enums;
 
 using System.Threading.Tasks;
+using System.Xml.Serialization;
+using Microsoft.AspNetCore.Http;
+
 
 namespace ServiceContracts
 {
@@ -28,7 +31,7 @@ namespace ServiceContracts
         /// <returns>Matching country object</returns>
         Task<CountryResponse?> GetCountryById(Guid? id);
 
-        
+        Task <int> UploadCountiresFromExcelFile(IFormFile formFile);
 
     }
 }

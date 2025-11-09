@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Entities.Migrations
 {
-    [DbContext(typeof(PersonsDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20251105102847_UpdateColumn_Persons_TaxIdentificationNumber_Constraints")]
     partial class UpdateColumn_Persons_TaxIdentificationNumber_Constraints
     {

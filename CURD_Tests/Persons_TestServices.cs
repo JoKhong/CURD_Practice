@@ -23,7 +23,7 @@ namespace CURD_Tests
 
             var services = new ServiceCollection();
 
-            services.AddDbContext<PersonsDbContext>(
+            services.AddDbContext<ApplicationDbContext>(
             options =>
             {
                 options.UseSqlServer(_sqlServer);
@@ -31,7 +31,7 @@ namespace CURD_Tests
 
             services.AddScoped<IPersonsServices>( provider => 
             {
-                PersonsDbContext? dbContext = provider.GetService<PersonsDbContext>();
+                ApplicationDbContext? dbContext = provider.GetService<ApplicationDbContext>();
                 CountryServices countryServices = provider.GetService<CountryServices>();
 
                 return new PersonServices(dbContext, countryServices);
@@ -39,7 +39,7 @@ namespace CURD_Tests
             
             services.AddScoped<ICountriesService>( provider => 
             {
-                PersonsDbContext? dbContext = provider.GetService<PersonsDbContext>();
+                ApplicationDbContext? dbContext = provider.GetService<ApplicationDbContext>();
                 return new CountryServices(dbContext);
             });
 

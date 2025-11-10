@@ -10,6 +10,9 @@ using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 
+using AutoFixture;
+
+
 namespace CURD_Tests
 {
     public class Persons_TestServices
@@ -18,8 +21,13 @@ namespace CURD_Tests
         private readonly IPersonsServices _personService;
         private readonly ITestOutputHelper _testOutputHelper;
 
+        private readonly IFixture _fixture;
+        private readonly Bogus.Faker _faker;
+
         public Persons_TestServices(ITestOutputHelper testOutputHelper)
         {
+            _faker = new Bogus.Faker();
+            _fixture = new Fixture();   
 
             var PersonsInitialData = new List<Person>() { };
             var countriesInitialData = new List<Country> { };
@@ -95,16 +103,10 @@ namespace CURD_Tests
         [Fact]
         public async Task AddPerson_Valid() 
         {
-            PersonAddRequest requestParams = new PersonAddRequest()
-            {
-                PersonName = "John",
-                Email = "example@mail.com",
-                DateOfBirth = new DateTime(1995, 01, 01),
-                Gender = SexOptions.Male,
-                CountryId = Guid.NewGuid(),
-                Address = "TestAdd",
-                ReceiveNewsLetters = false,
-            };
+            _fixture.Customize<PersonAddRequest>(composer =>
+                composer.With(u => u.Email, _faker.Internet.Email()));
+
+            PersonAddRequest requestParams = _fixture.Create<PersonAddRequest>();
 
             PersonResponse addedPerson = await _personService.AddPerson(requestParams);
 

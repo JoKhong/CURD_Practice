@@ -14,6 +14,7 @@ using AutoFixture;
 using OfficeOpenXml.Drawing.Chart;
 using AutoFixture.Kernel;
 
+using FluentAssertions;
 
 namespace CURD_Tests
 {
@@ -60,50 +61,50 @@ namespace CURD_Tests
         [Fact]
         public async Task AddPerson_PersonAddRequestNull()
         {
-            await Assert.ThrowsAsync<ArgumentNullException>( async () =>
+            PersonAddRequest request = null;
+
+            Func<Task> action =  async () =>
             {
-                PersonAddRequest request = null;
                 await _personService.AddPerson(request);
-            });
+            };
+
+            await action.Should().ThrowAsync<ArgumentNullException>();
+
         }
 
         //When provided field is null, should throw ArgumentExpection
         [Fact]
         public async Task AddPerson_PersonNameNullOrEmpty()
         {
-            await Assert.ThrowsAsync<ArgumentException>( async () =>
+            PersonAddRequest request = _fixture.Create<PersonAddRequest>();
+            request.PersonName = null as string;
+
+            Func<Task> action = async () =>
             {
-                PersonAddRequest test = _fixture.Create<PersonAddRequest>();
-
-                PersonAddRequest request = _fixture.Build<PersonAddRequest>()
-                .With(temp => temp.PersonName, null as string)
-                .With(temp => temp.Email, _faker.Internet.Email() )
-                .Create();
-
                 await _personService.AddPerson(request);
-            });
+            };
+
+            await action.Should().ThrowAsync<ArgumentException>();
+
         }
 
         //When there are duplicate data, should ArgumentExpection
         [Fact]
         public async Task AddPerson_PersonNameDublicate()
         {
-            await Assert.ThrowsAsync<ArgumentException>(async() =>
+            PersonAddRequest request1 = _fixture.Create<PersonAddRequest>();
+            request1.PersonName = "Bob";
+
+            PersonAddRequest request2 = _fixture.Create<PersonAddRequest>();
+            request2.PersonName = "Bob";
+
+            Func<Task> action = async () =>
             {
-                PersonAddRequest request1 = new PersonAddRequest
-                {
-                    PersonName = "Bob"
-                };
-
-                PersonAddRequest request2 = new PersonAddRequest
-                {
-                    PersonName = "Bob"
-                };
-
                 await _personService.AddPerson(request1);
                 await _personService.AddPerson(request2);
+            };
 
-            });
+            await action.Should().ThrowAsync<ArgumentException>();
 
         }
 
@@ -112,13 +113,12 @@ namespace CURD_Tests
         public async Task AddPerson_Valid() 
         {
             PersonAddRequest requestParams = _fixture.Create<PersonAddRequest>();
-
             PersonResponse addedPerson = await _personService.AddPerson(requestParams);
 
             List<PersonResponse> allPersons = await _personService.GetAllPersons();
 
-            Assert.True(addedPerson.PersonId != Guid.Empty);
-            Assert.Contains(addedPerson, allPersons);
+            addedPerson.PersonId.Should().NotBe(Guid.Empty);
+            allPersons.Should().Contain(addedPerson);
         }
 
         #endregion
@@ -129,7 +129,7 @@ namespace CURD_Tests
         {
             List<PersonResponse> result = await _personService.GetAllPersons();
 
-            Assert.Empty(result);
+            result.Should().BeEmpty();
         }
 
         [Fact]
@@ -181,7 +181,8 @@ namespace CURD_Tests
             //Validate
             foreach (PersonResponse item in addedResponses)
             {
-                Assert.Contains(item, requestResponse);
+                //Assert.Contains(item, requestResponse);
+                requestResponse.Should().Contain(item);
             }
         }
 
@@ -236,11 +237,7 @@ namespace CURD_Tests
                 _testOutputHelper.WriteLine(response.ToString());
             }
 
-            //Assert
-            foreach (PersonResponse item in requestResponse)
-            {
-                Assert.Contains(item, requestResponse);
-            }
+            requestResponse.Should().BeEquivalentTo(addedResponses);
         }
 
         [Fact]
@@ -302,16 +299,8 @@ namespace CURD_Tests
             }
 
             //Assert
-            foreach (PersonResponse addedPerson in addedResponses)
-            {
-                if(addedPerson.PersonName != null)
-                {
-                    if (addedPerson.PersonName.Contains(serchStr, StringComparison.OrdinalIgnoreCase))
-                    {
-                        Assert.Contains(addedPerson, filteredSearchResponse);
-                    }
-                }
-            }
+            filteredSearchResponse.Should().OnlyContain(temp => temp.PersonName.Contains(serchStr, StringComparison.OrdinalIgnoreCase));
+
         }
 
         #endregion
@@ -370,18 +359,14 @@ namespace CURD_Tests
 
             List<PersonResponse> sortedResponse = await _personService.GetSortedPersons(allPersons, nameof(Person.PersonName), SortOrderOptions.DESC);
            
-
             _testOutputHelper.WriteLine("Response:");
             foreach (var response in sortedResponse)
             {
                 _testOutputHelper.WriteLine(response.ToString());
             }
 
-            //Assert
-            for(int i = 0; i < addedResponses.Count; i++)
-            {
-                Assert.Equal(addedResponses[i], sortedResponse[i]);
-            }
+            sortedResponse.Should().BeInDescendingOrder(temp => temp.PersonName);
+
         }
 
 
@@ -399,7 +384,7 @@ namespace CURD_Tests
 
             PersonResponse? personById = await _personService.GetPersonById(response.PersonId);
 
-            Assert.Equal(personById, response);
+            personById.Should().Be(response);
         }
 
         [Fact]
@@ -407,7 +392,7 @@ namespace CURD_Tests
         {
             PersonResponse? personById = await _personService.GetPersonById(Guid.NewGuid());
 
-            Assert.Null(personById);
+            personById.Should().BeNull();
         }
         #endregion
 
@@ -417,23 +402,28 @@ namespace CURD_Tests
         [Fact]
         public async Task UpdatePerson_PersonUpdateRequestNull()
         {
-            await Assert.ThrowsAsync<ArgumentNullException>( async () =>
+            PersonUpdateRequest request = null;
+
+            Func<Task> action = async () =>
             {
-                PersonUpdateRequest request = null;
                 await _personService.UpdatePerson(request);
-            });
+            };
+
+            await action.Should().ThrowAsync<ArgumentNullException>();
         }
 
         [Fact]
         public async Task UpdatePerson_InvalidId()
         {
-            await Assert.ThrowsAsync<ArgumentException>( async () =>
-            {
-                PersonUpdateRequest request = _fixture.Create<PersonUpdateRequest>();
-                request.PersonId = Guid.NewGuid();  
+            PersonUpdateRequest request = _fixture.Create<PersonUpdateRequest>();
+            request.PersonId = Guid.NewGuid();
 
+            Func<Task> action = async () =>
+            {
                 await _personService.UpdatePerson(request);
-            });
+            };
+
+            await action.Should().ThrowAsync<ArgumentException>();
         }
 
         [Fact]
@@ -451,10 +441,13 @@ namespace CURD_Tests
             PersonUpdateRequest responseToUpdateRequest = response.ToPersonUpdateRequest();
             responseToUpdateRequest.PersonName = null;
 
-            await Assert.ThrowsAsync<ArgumentException>( async() =>
+            Func<Task> action = async () => 
             {
                 await _personService.UpdatePerson(responseToUpdateRequest);
-            });
+            };
+
+            await action.Should().ThrowAsync<ArgumentException>();
+
         }
 
         [Fact]
@@ -476,8 +469,7 @@ namespace CURD_Tests
 
             PersonResponse? responseFromGetById = await _personService.GetPersonById(responseToUpdateRequest.PersonId);
 
-            Assert.Equal(updateResponse, responseFromGetById);
-
+            updateResponse.Should().Be(responseFromGetById);
         }
 
         #endregion
@@ -497,7 +489,7 @@ namespace CURD_Tests
             PersonResponse response = await _personService.AddPerson(requestParams);
             bool deleteSuccess = await _personService.DeletePerson(null);
 
-            Assert.False(deleteSuccess);
+            deleteSuccess.Should().BeFalse();
         }
 
         [Fact]
@@ -513,7 +505,7 @@ namespace CURD_Tests
             PersonResponse response = await _personService.AddPerson(requestParams);
             bool deleteSuccess = await _personService.DeletePerson(response.PersonId);
 
-            Assert.True(deleteSuccess);
+            deleteSuccess.Should().BeTrue();
         }
 
         #endregion

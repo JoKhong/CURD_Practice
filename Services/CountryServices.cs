@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
+using RepositoryContracts;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using System.Diagnostics.Metrics;
@@ -10,11 +11,11 @@ namespace Services
 {
     public class CountryServices : ICountriesService
     {
-        private readonly ApplicationDbContext _db;
+        private readonly ICountriesRepository _countriesRepository;
 
-        public CountryServices(ApplicationDbContext personsDbContext)
+        public CountryServices(ICountriesRepository countriesRepo)
         {
-            _db = personsDbContext;
+            _countriesRepository = countriesRepo;
         }
 
         public async Task<CountryResponse> AddCountry(CountryAddRequest? AddRequest)
@@ -27,7 +28,7 @@ namespace Services
                 throw new ArgumentException("AddRequest.CountryName is null or empty");
             }
 
-            if (await _db.Countries.CountAsync(aCountry => aCountry.CountryName == AddRequest.CountryName) > 0)
+            if (await _countriesRepository.GetCountryByName(AddRequest.CountryName) is not null)
             {
                 throw new ArgumentException("Country already added");
             }
@@ -37,8 +38,7 @@ namespace Services
                 Country country = AddRequest.ToCountry();
                 country.CountryId = Guid.NewGuid();
 
-                _db.Countries.Add(country);
-                await _db.SaveChangesAsync();
+                await _countriesRepository.AddCountry(country);
 
                 return country.ToCountryResponse();
             }
@@ -51,7 +51,9 @@ namespace Services
 
         public async Task<List<CountryResponse>> GetAllCountries()
         {
-            return await _db.Countries.Select(country => country.ToCountryResponse()).ToListAsync();
+            List<Country> countries = await _countriesRepository.GetAllCountries();
+
+            return countries.Select(temp => temp.ToCountryResponse()).ToList();
         }
 
         public async Task<CountryResponse?> GetCountryById(Guid? id)
@@ -59,7 +61,7 @@ namespace Services
             if(id == null)
                 return null;
 
-            Country? validCountry = await _db.Countries.Where( country => country.CountryId == id).FirstAsync();
+            Country? validCountry = await _countriesRepository.GetCountryById(id.Value);
 
             if (validCountry == null)
                 return null;
@@ -90,12 +92,11 @@ namespace Services
                     {
                         string? countryName = cellValue;
 
-                        if(_db.Countries.Where( country => country.CountryName == countryName ).Count() == 0)
+                        if(_countriesRepository.GetCountryByName(countryName) is null)
                         {
                             Country addRequest = new Country() { CountryName = countryName };
-                            _db.Countries.Add(addRequest);
+                            await _countriesRepository.AddCountry(addRequest);
 
-                            await _db.SaveChangesAsync();
                             countriesInserted++;
                         }
                     }

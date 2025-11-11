@@ -17,12 +17,12 @@ namespace RepositoryContracts
 
         Task<List<Person>> GetAllPersons();
 
-        Task<List<Person>> GetPersonById(Guid personId);
-        Task<List<Person>> GetFilteredPersons(Expression<Func<Person, bool>> predicate);
+        Task<Person?> GetPersonById(Guid personId);
+        Task<List<Person>?> GetFilteredPersons(Expression<Func<Person, bool>> predicate);
 
         Task<bool> DeletePersonsById(Guid personId);
 
-        Task<bool> UpdatePerson(Person person);
+        Task<Person> UpdatePerson(Person person);
 
     }
 }

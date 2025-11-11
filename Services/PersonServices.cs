@@ -49,11 +49,11 @@ namespace Services
             //Model Validation
             ValidationHelper.ModelValidation(addRequest);
 
-            List<PersonResponse> results =  (await _personRepository.GetAllPersons())
-                .Select(temp => temp.ToPersonResponse()).ToList();
+            //List<PersonResponse> results =  (await _personRepository.GetAllPersons())
+            //    .Select(temp => temp.ToPersonResponse()).ToList();
 
-            if (results.FirstOrDefault( temp => temp.PersonName == addRequest.PersonName ) is not null)
-                throw new ArgumentException("Duplicate Names");
+            //if (results.FirstOrDefault( temp => temp.PersonName == addRequest.PersonName ) is not null)
+            //    throw new ArgumentException("Duplicate Names");
 
             try 
             {

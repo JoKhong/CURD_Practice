@@ -4,6 +4,9 @@ using OfficeOpenXml;
 using ServiceContracts;
 using Services;
 
+using RepositoryContracts;
+using Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
@@ -16,7 +19,10 @@ options =>
 
 //Optional, For Dependency Injection
 
-//Add Auto, ASP.NET auto covers it
+//Add Auto, ASP.NET covers parameters when add as service
+builder.Services.AddScoped<ICountriesRepository, CountriesRepositories>();
+builder.Services.AddScoped<IPersonsRepository, PersonsRepositories>();
+
 builder.Services.AddScoped<ICountriesService, CountryServices>();
 builder.Services.AddScoped<IPersonsServices, PersonServices>();
 

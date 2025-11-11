@@ -47,7 +47,7 @@ namespace CURD_Tests
             dbContextMock.CreateDbSetMock(temp => temp.Countries, countriesInitialData);
 
             _countryService = new CountryServices(null);
-            _personService = new PersonServices(dbContextPersons, _countryService);
+            _personService = new PersonServices(null, _countryService);
 
             _testOutputHelper = testOutputHelper;
 

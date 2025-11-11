@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Repositories
 {
-    internal class PersonsRepositories : IPersonsRepository
+    public class PersonsRepositories : IPersonsRepository
     {
         private readonly ApplicationDbContext _db;
 

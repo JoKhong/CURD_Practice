@@ -77,7 +77,7 @@ namespace CURD_Practice.Controllers
 
                 ViewBag.Countries = _countratesServices.GetAllCountries();
                 ViewBag.Errors = ModelState.Values.SelectMany( v => v.Errors ).Select(e => e.ErrorMessage).ToList();
-                return View();
+                return View(addRequest);
             }
 
             await _personsServices.AddPerson(addRequest);

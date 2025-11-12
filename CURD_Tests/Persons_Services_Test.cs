@@ -21,7 +21,7 @@ using Xunit.Abstractions;
 
 namespace CURD_Tests
 {
-    public class Persons_TestServices
+    public class Persons_Services_Test
     {
         private readonly ICountriesService _countryService;
         private readonly IPersonsServices _personService;
@@ -33,7 +33,7 @@ namespace CURD_Tests
         private readonly IFixture _fixture;
         private readonly Bogus.Faker _faker;
 
-        public Persons_TestServices(ITestOutputHelper testOutputHelper)
+        public Persons_Services_Test(ITestOutputHelper testOutputHelper)
         {
             _faker = new Bogus.Faker();
             _fixture = new Fixture();   

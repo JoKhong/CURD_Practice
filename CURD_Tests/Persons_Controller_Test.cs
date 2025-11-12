@@ -19,7 +19,7 @@ using NuGet.Frameworks;
 
 namespace CURD_Tests
 {
-    public class PersonsControllerTest
+    public class Persons_Controller_Test
     {
         private readonly IPersonsServices _personServices;
         private readonly ICountriesService _countriesService;
@@ -30,7 +30,7 @@ namespace CURD_Tests
         private readonly IFixture _fixture;
         private readonly Bogus.Faker _faker;
 
-        public PersonsControllerTest()
+        public Persons_Controller_Test()
         {
             _faker = new Bogus.Faker();
             _fixture = new Fixture();

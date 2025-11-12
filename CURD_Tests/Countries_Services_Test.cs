@@ -16,7 +16,7 @@ using Xunit.Sdk;
 
 namespace CURD_Tests
 {
-    public class Countries_TestServices
+    public class Countries_Services_Test
     {
         private readonly ICountriesService _countryService;
         private readonly ITestOutputHelper _testOutputHelper;
@@ -26,7 +26,7 @@ namespace CURD_Tests
 
         private readonly IFixture _fixture;
 
-        public Countries_TestServices(ITestOutputHelper testOutputHelper)
+        public Countries_Services_Test(ITestOutputHelper testOutputHelper)
         {
             var countriesInitialData = new List<Country> { };
 

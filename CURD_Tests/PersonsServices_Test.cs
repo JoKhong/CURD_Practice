@@ -5,9 +5,12 @@ using EntityFrameworkCoreMock;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 using OfficeOpenXml.Drawing.Chart;
 using RepositoryContracts;
+using Serilog;
+using Serilog.Extensions.Hosting;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
@@ -39,8 +42,11 @@ namespace CURD_Tests
             _fixture = new Fixture();   
 
             _personsRepoMock = new Mock<IPersonsRepository>();
-            _personsRepository = _personsRepoMock.Object;
 
+            var loggerMock = new Mock<ILogger<PersonServices>>();
+            var diagContextMock = new Mock<IDiagnosticContext>();
+           
+            _personsRepository = _personsRepoMock.Object;
             
             var PersonsInitialData = new List<Person>() { };
             var countriesInitialData = new List<Country> { };
@@ -56,8 +62,7 @@ namespace CURD_Tests
             ApplicationDbContext dbContextCountries = dbContextMock.Object;
             dbContextMock.CreateDbSetMock(temp => temp.Countries, countriesInitialData);
 
-            _countryService = new CountryServices(null);
-            _personService = new PersonServices(_personsRepository, _countryService);
+            _personService = new PersonServices(_personsRepository, loggerMock.Object, diagContextMock.Object);
 
             _testOutputHelper = testOutputHelper;
 

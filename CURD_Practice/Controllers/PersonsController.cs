@@ -17,16 +17,27 @@ namespace CURD_Practice.Controllers
         private readonly IPersonsServices _personsServices;
         private readonly ICountriesService _countratesServices;
 
-        public PersonsController(IPersonsServices personsServices, ICountriesService countratesServices)
+        private readonly ILogger<PersonsController> _logger;
+
+        public PersonsController(IPersonsServices personsServices, ICountriesService countratesServices, ILogger<PersonsController> logger)
         {
             _personsServices = personsServices;
             _countratesServices = countratesServices;
+            _logger = logger;
         }
 
         [Route("[action]")]
         [Route("/")]
         public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.PersonName), SortOrderOptions sortOrder = SortOrderOptions.ASC)
         {
+            _logger.LogInformation("Index method of PersonsController entered");
+
+            _logger.LogDebug($"searchby:{searchBy}, " +
+                $"searchString:{searchString}, " +
+                $"sortBy:{sortBy}, " +
+                $"sortOrder:{sortOrder}"
+                );
+
             //Searching
             ViewBag.SearchFields = new Dictionary<string, string>()
             {

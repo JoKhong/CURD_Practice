@@ -3,6 +3,7 @@ using CsvHelper.Configuration;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
 using OfficeOpenXml.ExternalReferences;
 using RepositoryContracts;
@@ -18,15 +19,13 @@ namespace Services
     public class PersonServices : IPersonsServices
     {
         private readonly IPersonsRepository _personRepository;
-        private readonly ICountriesService _countriesService;
 
-        public PersonServices(IPersonsRepository personRepo, ICountriesService countriesService)
+        private readonly ILogger<PersonServices> _logger;
+
+        public PersonServices(IPersonsRepository personRepo, ILogger<PersonServices> logger)
         {
             _personRepository = personRepo;
-            _countriesService = countriesService;
-
-            if (_countriesService == null)
-                throw new ArgumentNullException(nameof(countriesService));
+            _logger = logger;
         }
 
         //private PersonResponse ConvertPersonToResponseWithCountry(Person person)
@@ -43,6 +42,8 @@ namespace Services
 
         public async Task<PersonResponse> AddPerson(PersonAddRequest? addRequest)
         {
+            _logger.LogInformation("AddPerson of PersonServices");
+
             if (addRequest == null)
                 throw new ArgumentNullException();
 
@@ -75,6 +76,8 @@ namespace Services
 
         public async Task<List<PersonResponse>> GetAllPersons()
         {
+            _logger.LogInformation("GetAllPersons of PersonServices");
+
             var persons = await _personRepository.GetAllPersons();
 
             return persons.Select(temp => temp.ToPersonResponse() ).ToList();
@@ -82,6 +85,7 @@ namespace Services
 
         public async Task<PersonResponse?> GetPersonById(Guid? id)
         {
+            _logger.LogInformation("GetPersonById of PersonServices");
             //throw new NotImplementedException();
 
             if (id == null)
@@ -97,6 +101,9 @@ namespace Services
 
         public async Task<List<PersonResponse>> GetFilteredPersons(string searchBy, string? searchString)
         {
+            _logger.LogInformation("GetFilteredPersons of PersonServices");
+            //_logger.LogDebug($"searchBy:{searchBy}, searchString:{searchString}");
+
             List<Person>? persons = searchBy switch
             {
                 nameof(PersonResponse.PersonName) =>
@@ -136,7 +143,9 @@ namespace Services
 
         public async Task<List<PersonResponse>> GetSortedPersons(List<PersonResponse> allPersons, string sortBy, SortOrderOptions sortOrder)
         {
-            if(string.IsNullOrEmpty(sortBy))
+            _logger.LogInformation("GetSortedPersons of PersonServices");
+
+            if (string.IsNullOrEmpty(sortBy))
                 return allPersons;
 
             List<PersonResponse> sortedPersons = (sortBy, sortOrder) switch
@@ -192,7 +201,9 @@ namespace Services
 
         public async Task<PersonResponse> UpdatePerson(PersonUpdateRequest? updateRequest)
         {
-            if(updateRequest == null)
+            _logger.LogInformation("UpdatePerson of PersonServices");
+
+            if (updateRequest == null)
                 throw new ArgumentNullException(nameof(updateRequest));
 
             ValidationHelper.ModelValidation(updateRequest);
@@ -223,6 +234,8 @@ namespace Services
 
         public async Task<bool> DeletePerson(Guid? personId)
         {
+            _logger.LogInformation("DeletePerson of PersonServices");
+
             if (personId == null || personId == Guid.Empty)
                 return false;
 
@@ -238,6 +251,8 @@ namespace Services
 
         public async Task<MemoryStream> GetPersonsCSV()
         {
+            _logger.LogInformation("GetPersonsCSV of PersonServices");
+
             MemoryStream stream = new MemoryStream();
             StreamWriter writer = new StreamWriter(stream);
 
@@ -261,6 +276,8 @@ namespace Services
 
         public async Task<MemoryStream> GetPersonsCSVCustom()
         {
+            _logger.LogInformation("GetPersonsCSVCustom of PersonServices");
+
             MemoryStream stream = new MemoryStream();
             StreamWriter writer = new StreamWriter(stream);
 
@@ -308,6 +325,8 @@ namespace Services
 
         public async Task<MemoryStream> GetPersonsExcel()
         {
+            _logger.LogInformation("GetPersonsExcel of PersonServices");
+
             MemoryStream stream = new MemoryStream();
 
             using var package = new ExcelPackage();

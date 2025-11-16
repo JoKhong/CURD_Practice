@@ -1,5 +1,6 @@
 ﻿using Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using RepositoryContracts;
 using System;
 using System.Collections.Generic;
@@ -13,14 +14,18 @@ namespace Repositories
     public class PersonsRepositories : IPersonsRepository
     {
         private readonly ApplicationDbContext _db;
+        private readonly ILogger<PersonsRepositories> _logger;
 
-        public PersonsRepositories(ApplicationDbContext db)
+        public PersonsRepositories(ApplicationDbContext db, ILogger<PersonsRepositories> logger)
         {
             _db = db;
+            _logger = logger;
         }
 
         public async Task<Person> AddPerson(Person person)
         {
+            _logger.LogInformation("AddPerson of PersonsRepositories");
+
             _db.Persons.Add(person);
             await _db.SaveChangesAsync();
 
@@ -29,11 +34,15 @@ namespace Repositories
 
         public async Task<List<Person>> GetAllPersons()
         {
+            _logger.LogInformation("GetAllPersons of PersonsRepositories");
+
             return await _db.Persons.Include("Country").ToListAsync();
         }
 
         public async Task<Person?> GetPersonById(Guid personId)
         {
+            _logger.LogInformation("GetPersonById of PersonsRepositories");
+
             return await _db.Persons.Include("Country")
                 .FirstOrDefaultAsync(temp => temp.PersonId == personId);
 
@@ -41,6 +50,8 @@ namespace Repositories
 
         public async Task<List<Person>?> GetFilteredPersons(Expression<Func<Person, bool>> predicate)
         {
+            _logger.LogInformation("GetFilteredPersons of PersonsRepositories");
+
             return await _db.Persons.Include("Country")
                 .Where(predicate)
                 .ToListAsync();
@@ -48,6 +59,8 @@ namespace Repositories
 
         public async Task<Person> UpdatePerson(Person person)
         {
+            _logger.LogInformation("UpdatePerson of PersonsRepositories");
+
             Person? mathcingPerson = await _db.Persons.Include("Country").FirstOrDefaultAsync(temp => temp.PersonId == person.PersonId);
             
             if(mathcingPerson == null)
@@ -71,6 +84,8 @@ namespace Repositories
 
         public async Task<bool> DeletePersonsById(Guid personId)
         {
+            _logger.LogInformation("DeletePersonsById of PersonsRepositories");
+
             _db.Persons.RemoveRange( _db.Persons.Where( temp => temp.PersonId == personId) );
             int rowsDeleted = await _db.SaveChangesAsync();
 

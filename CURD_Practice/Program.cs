@@ -69,6 +69,8 @@ provider =>
 
 var app = builder.Build();
 
+app.UseSerilogRequestLogging();
+
 if(builder.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();

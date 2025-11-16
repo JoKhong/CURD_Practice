@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
 using OfficeOpenXml.ExternalReferences;
 using RepositoryContracts;
+using Serilog;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
@@ -22,10 +23,14 @@ namespace Services
 
         private readonly ILogger<PersonServices> _logger;
 
-        public PersonServices(IPersonsRepository personRepo, ILogger<PersonServices> logger)
+        private readonly IDiagnosticContext _diagnosticContext;
+
+        public PersonServices(IPersonsRepository personRepo, ILogger<PersonServices> logger, IDiagnosticContext diagContext)
         {
             _personRepository = personRepo;
             _logger = logger;
+
+            _diagnosticContext = diagContext;
         }
 
         //private PersonResponse ConvertPersonToResponseWithCountry(Person person)
@@ -136,7 +141,9 @@ namespace Services
 
                 _ => await _personRepository.GetAllPersons(),
             };
-           
+
+            _diagnosticContext.Set("Persons", persons);
+
             return persons.Select(temp => temp.ToPersonResponse()).ToList();
 
         }

@@ -16,7 +16,9 @@ namespace CURD_Practice.Filters.ActionFilters
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            _logger.LogInformation("PersonsListActionFilter.OnActionExcuting method");
+            _logger.LogInformation("{FilterName}.{MethodName}", 
+                nameof(PersonsListActionFilter), 
+                nameof(OnActionExecuting));
 
             //Add the context.ActionArguments to the httpContext items, Allows calling in Excuted later
             context.HttpContext.Items["arguments"] = context.ActionArguments;
@@ -53,8 +55,10 @@ namespace CURD_Practice.Filters.ActionFilters
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
-        {
-            _logger.LogInformation("PersonsListActionFilter.OnActionExecuted method");
+        {  
+            _logger.LogInformation("{FilterName}.{MethodName}",
+                nameof(PersonsListActionFilter),
+                nameof(OnActionExecuted));
 
             //Cast the context in persons controller
             PersonsController personsController = (PersonsController)context.Controller;

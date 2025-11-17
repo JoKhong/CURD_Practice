@@ -41,6 +41,8 @@ namespace CURD_Practice.Controllers
                 );
 
             //Searching
+
+            /* Done in ActionFilters
             ViewBag.SearchFields = new Dictionary<string, string>()
             {
                 { nameof(PersonResponse.PersonName), "Person Name"},
@@ -51,15 +53,17 @@ namespace CURD_Practice.Controllers
                 { nameof(PersonResponse.Country), "Country"},
                 { nameof(PersonResponse.Address), "Address"},
             };
+            */
 
-            List <PersonResponse> responsePersons = await _personsServices.GetFilteredPersons(searchBy, searchString);
-            ViewBag.CurrentSearchBy = searchBy;
-            ViewBag.CurrentSearchString = searchString;
-
-            //Sorting
-            List<PersonResponse> sortedPersons = await _personsServices.GetSortedPersons(responsePersons, sortBy, sortOrder);
-            ViewBag.CurrentSortBy = sortBy;
-            ViewBag.CurrentSortOrder = sortOrder.ToString();
+            List <PersonResponse> responsePersons = await _personsServices.GetFilteredPersons(searchBy, searchString);//Filter 
+            List<PersonResponse> sortedPersons = await _personsServices.GetSortedPersons(responsePersons, sortBy, sortOrder);//Sort
+            
+            /* Done in ActionFilter
+                        ViewBag.CurrentSearchBy = searchBy;
+                        ViewBag.CurrentSearchString = searchString;
+                        ViewBag.CurrentSortBy = sortBy;
+                        ViewBag.CurrentSortOrder = sortOrder.ToString();
+            */
 
             return View(sortedPersons);
         }

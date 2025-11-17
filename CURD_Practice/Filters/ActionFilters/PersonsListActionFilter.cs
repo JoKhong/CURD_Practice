@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using CURD_Practice.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.IdentityModel.Tokens;
+using ServiceContracts.DTO;
 
 namespace CURD_Practice.Filters.ActionFilters
 {
@@ -15,11 +17,85 @@ namespace CURD_Practice.Filters.ActionFilters
         public void OnActionExecuting(ActionExecutingContext context)
         {
             _logger.LogInformation("PersonsListActionFilter.OnActionExcuting method");
+
+            //Add the context.ActionArguments to the httpContext items, Allows calling in Excuted later
+            context.HttpContext.Items["arguments"] = context.ActionArguments;
+
+            if (context.ActionArguments.ContainsKey("searchBy"))
+            {
+                string? searchBy = Convert.ToString(context.ActionArguments["searchBy"]);
+
+                if (!string.IsNullOrEmpty(searchBy)) 
+                {
+                    var searchByOption = new List<string>()
+                    {
+                        nameof(PersonResponse.PersonName),
+                        nameof(PersonResponse.Email),
+                        nameof(PersonResponse.DateOfBirth),
+                        nameof(PersonResponse.Age),
+                        nameof(PersonResponse.Gender),
+                        nameof(PersonResponse.Country),
+                        nameof(PersonResponse.Address),
+                        nameof(PersonResponse.ReceiveNewsLetters)
+                    };
+
+                    if (searchByOption.Any(x => x == searchBy) == false) 
+                    {
+                        _logger.LogInformation("searchBy actual value {searchBy}", searchBy);
+
+                        context.ActionArguments["searchBy"] = nameof(PersonResponse.PersonName);
+                        _logger.LogInformation("searchBy updated value {searchBy}", context.ActionArguments["searchBy"]);
+                    }
+                }
+            }
+
+           
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
             _logger.LogInformation("PersonsListActionFilter.OnActionExecuted method");
+
+            //Cast the context in persons controller
+            PersonsController personsController = (PersonsController)context.Controller;
+
+            IDictionary<string, object?>? parameters = (IDictionary<string, object?>?)context.HttpContext.Items["arguments"];
+
+
+            if (parameters is not null) 
+            {
+                if(parameters.ContainsKey("searchBy"))
+                {
+                    personsController.ViewData["CurrentSearchBy"] = Convert.ToString(parameters["searchBy"]);
+                }
+
+                if (parameters.ContainsKey("searchString"))
+                {
+                    personsController.ViewData["CurrentSearchString"] = Convert.ToString(parameters["searchString"]);
+                }
+
+                if (parameters.ContainsKey("sortBy"))
+                {
+                    personsController.ViewData["CurrentSortBy"] = Convert.ToString(parameters["sortBy"]) ;
+                }
+
+                if (parameters.ContainsKey("sortOrder"))
+                {
+                    personsController.ViewData["CurrentSortOrder"] = Convert.ToString(parameters["sortOrder"]);
+                }
+            }
+
+            personsController.ViewBag.SearchFields = new Dictionary<string, string>()
+            {
+                { nameof(PersonResponse.PersonName), "Person Name"},
+                { nameof(PersonResponse.Email), "Email"},
+                { nameof(PersonResponse.DateOfBirth), "Date of Birth"},
+                { nameof(PersonResponse.Age), "Age"},
+                { nameof(PersonResponse.Gender), "Gender"},
+                { nameof(PersonResponse.Country), "Country"},
+                { nameof(PersonResponse.Address), "Address"},
+            };
+
         }
     }
 }

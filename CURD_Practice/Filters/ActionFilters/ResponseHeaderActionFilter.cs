@@ -3,7 +3,7 @@ using Microsoft.Identity.Client;
 
 namespace CURD_Practice.Filters.ActionFilters
 {
-    public class ResponseHeaderActionFilter : IActionFilter, IOrderedFilter
+    public class ResponseHeaderActionFilter : IAsyncActionFilter, IOrderedFilter
     {
         private readonly ILogger<ResponseHeaderActionFilter> _logger;
 
@@ -21,23 +21,19 @@ namespace CURD_Practice.Filters.ActionFilters
             Order = order;
         }
 
-        public void OnActionExecuting(ActionExecutingContext context)
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            _logger.LogInformation("{FilteredName}.{MethodName}"
-                , nameof(ResponseHeaderActionFilter)
-                , nameof(OnActionExecuting));
-        }
+            _logger.LogInformation("{FilteredName}.{MethodName} Before"
+               , nameof(ResponseHeaderActionFilter)
+               , nameof(OnActionExecutionAsync));
 
-        public void OnActionExecuted(ActionExecutedContext context)
-        {
-            _logger.LogInformation("{FilteredName}.{MethodName}"
-                 , nameof(ResponseHeaderActionFilter)
-                 , nameof(OnActionExecuted));
+            await next();//Must have this 
+
+            _logger.LogInformation("{FilteredName}.{MethodName} After"
+                , nameof(ResponseHeaderActionFilter)
+                , nameof(OnActionExecutionAsync));
 
             context.HttpContext.Response.Headers[_key] = _value;
-
         }
-
-      
     }
 }

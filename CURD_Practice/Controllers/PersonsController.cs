@@ -94,17 +94,10 @@ namespace CURD_Practice.Controllers
 
         [Route("[action]")]
         [HttpPost]
-        public async Task<IActionResult> Create(PersonAddRequest addRequest)
-        {
-            if (!ModelState.IsValid) {
-
-                ViewBag.Countries = _countratesServices.GetAllCountries();
-                ViewBag.Errors = ModelState.Values.SelectMany( v => v.Errors ).Select(e => e.ErrorMessage).ToList();
-                return View(addRequest);
-            }
-
-            await _personsServices.AddPerson(addRequest);
-
+        [TypeFilter(typeof(PersonCreateAndEditPostActionFilter))]
+        public async Task<IActionResult> Create(PersonAddRequest personRequest)
+        {  
+            await _personsServices.AddPerson(personRequest);
             return RedirectToAction("Index", "Persons");
         }
 
@@ -135,17 +128,15 @@ namespace CURD_Practice.Controllers
 
         [Route("[action]/{personId}")]
         [HttpPost]
-        public async Task<IActionResult> Edit(PersonUpdateRequest upDateRequest)
+        [TypeFilter(typeof(PersonCreateAndEditPostActionFilter))]
+        public async Task<IActionResult> Edit(PersonUpdateRequest personRequest)
         {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Countries = _countratesServices.GetAllCountries();
-                ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                return View();
-            }
+            PersonResponse? response = await _personsServices.GetPersonById(personRequest.PersonId);
 
-            await _personsServices.UpdatePerson(upDateRequest);
+            if (response == null)
+                return RedirectToAction("Index");
 
+            await _personsServices.UpdatePerson(personRequest);
             return RedirectToAction("Index", "Persons");
         }
 
@@ -176,13 +167,13 @@ namespace CURD_Practice.Controllers
 
         [Route("[action]/{personId}")]
         [HttpPost]
-        public async Task<IActionResult> Delete(PersonUpdateRequest upDateRequest)
+        public async Task<IActionResult> Delete(PersonUpdateRequest deleteRequest)
         {
-            PersonResponse? personResponse = await _personsServices.GetPersonById(upDateRequest.PersonId);
+            PersonResponse? personResponse = await _personsServices.GetPersonById(deleteRequest.PersonId);
             if (personResponse == null)
                 return RedirectToAction("Index", "Persons");
 
-            await _personsServices.DeletePerson(upDateRequest.PersonId);
+            await _personsServices.DeletePerson(deleteRequest.PersonId);
             return RedirectToAction("Index", "Persons");
         }
 

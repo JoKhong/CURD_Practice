@@ -12,7 +12,7 @@ using CURD_Practice.Filters.ActionFilters;
 namespace CURD_Practice.Controllers
 {
     [Route("[controller]")]
-
+    [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Controller-Key", "X-Controller-Value" })]
     public class PersonsController : Controller
     {
         private readonly IPersonsServices _personsServices;
@@ -30,7 +30,7 @@ namespace CURD_Practice.Controllers
         [Route("[action]")]
         [Route("/")]
         [TypeFilter(typeof(PersonsListActionFilter))]
-        [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Custom-Key", "Custom-Value"} )]
+        [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Action-Key", "X-Action-Value"} )]
         public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.PersonName), SortOrderOptions sortOrder = SortOrderOptions.ASC)
         {
             _logger.LogInformation("Index method of PersonsController entered");
@@ -71,7 +71,6 @@ namespace CURD_Practice.Controllers
 
         [Route("[action]")]
         [HttpGet]
-        [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "my-key", "my-value" })]
         public async Task<IActionResult> Create()
         {
             List<CountryResponse> allCountires = await _countratesServices.GetAllCountries();

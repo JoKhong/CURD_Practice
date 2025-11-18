@@ -8,6 +8,7 @@ using Repositories;
 
 using Serilog;
 using Serilog.AspNetCore;
+using CURD_Practice.Filters.ActionFilters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +20,12 @@ builder.Host.UseSerilog( (HostBuilderContext context, IServiceProvider services,
     .ReadFrom.Services(services);// Read current app services and make them avilable to serilog
 });
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews( options => {
+
+    var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
+    options.Filters.Add(new ResponseHeaderActionFilter(logger, "X-Global-Key", "X-Global-Value"));
+
+});
 
 builder.Services.AddHttpClient();
 

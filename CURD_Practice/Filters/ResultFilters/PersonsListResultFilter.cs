@@ -19,7 +19,7 @@ namespace CURD_Practice.Filters.ResultFilters
 
             _logger.LogInformation("{FileName}.{MethodName} After", nameof(PersonsListResultFilter), nameof(OnResultExecutionAsync));
 
-            context.HttpContext.Response.Headers["Last-Modified"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+            //context.HttpContext.Response.Headers["Last-Modified"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
 
         }
     }

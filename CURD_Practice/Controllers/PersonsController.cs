@@ -1,4 +1,6 @@
 ﻿using CURD_Practice.Filters.ActionFilters;
+using CURD_Practice.Filters.AuthorizationFilters;
+using CURD_Practice.Filters.ResourceFilters;
 using CURD_Practice.Filters.ResultFilters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -16,8 +18,8 @@ namespace CURD_Practice.Controllers
     //Execute from lowest to highest
 
     [Route("[controller]")]
-    [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Controller-Key", "X-Controller-Value" })]
-    //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Controller-Key", "X-Controller-Value" , 2}, Order = 2)] //Force Set order 
+    //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Controller-Key", "X-Controller-Value" })]
+    [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Controller-Key", "X-Controller-Value" , 1}, Order = 1)] //Force Set order 
     public class PersonsController : Controller
     {
         private readonly IPersonsServices _personsServices;
@@ -35,8 +37,8 @@ namespace CURD_Practice.Controllers
         [Route("[action]")]
         [Route("/")]
         [TypeFilter(typeof(PersonsListActionFilter))]
-        [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Action-Key", "X-Action-Value"})]
-        //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Action-Key", "X-Action-Value" , 1} , Order = 1)] // Force Set order 
+        //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Action-Key", "X-Action-Value"})]
+        [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Action-Key", "X-Action-Value" , 2} , Order = 2)] // Force Set order 
         [TypeFilter(typeof(PersonsListResultFilter))]
         public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.PersonName), SortOrderOptions sortOrder = SortOrderOptions.ASC)
         {
@@ -97,6 +99,7 @@ namespace CURD_Practice.Controllers
         [Route("[action]")]
         [HttpPost]
         [TypeFilter(typeof(PersonCreateAndEditPostActionFilter))]
+        //[TypeFilter(typeof(FeatureDisableResourceFilter), Arguments = new object[] { true })]
         public async Task<IActionResult> Create(PersonAddRequest personRequest)
         {  
             await _personsServices.AddPerson(personRequest);
@@ -105,6 +108,7 @@ namespace CURD_Practice.Controllers
 
         [Route("[action]/{personId}")]
         [HttpGet]
+        [TypeFilter(typeof(TokenResultFilter))]//Add cookie during get
         public async Task<IActionResult> Edit(Guid personId)
         {
             PersonResponse? personById = await _personsServices.GetPersonById(personId);
@@ -131,6 +135,7 @@ namespace CURD_Practice.Controllers
         [Route("[action]/{personId}")]
         [HttpPost]
         [TypeFilter(typeof(PersonCreateAndEditPostActionFilter))]
+        [TypeFilter(typeof(TokenAuthorizationFileter))]//Authorize update
         public async Task<IActionResult> Edit(PersonUpdateRequest personRequest)
         {
             PersonResponse? response = await _personsServices.GetPersonById(personRequest.PersonId);

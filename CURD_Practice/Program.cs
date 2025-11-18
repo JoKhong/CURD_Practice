@@ -20,10 +20,11 @@ builder.Host.UseSerilog( (HostBuilderContext context, IServiceProvider services,
     .ReadFrom.Services(services);// Read current app services and make them avilable to serilog
 });
 
+
 builder.Services.AddControllersWithViews( options => {
 
-    var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
-    options.Filters.Add(new ResponseHeaderActionFilter(logger, "X-Global-Key", "X-Global-Value" , 0));
+    var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>(); 
+    options.Filters.Add(new ResponseHeaderActionFilter(logger, "X-Global-Key", "X-Global-Value" , 0)); // Add in Global Filter
 
 });
 

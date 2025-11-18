@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CURD_Practice.Filters.ActionFilters;
+using CURD_Practice.Filters.ResultFilters;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Rotativa.AspNetCore;
 using Microsoft.Data.SqlClient;
+using Rotativa.AspNetCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using System.Globalization;
 using System.Threading.Tasks;
-using CURD_Practice.Filters.ActionFilters;
 
 namespace CURD_Practice.Controllers
 {
@@ -36,6 +37,7 @@ namespace CURD_Practice.Controllers
         [TypeFilter(typeof(PersonsListActionFilter))]
         [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Action-Key", "X-Action-Value"})]
         //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Action-Key", "X-Action-Value" , 1} , Order = 1)] // Force Set order 
+        [TypeFilter(typeof(PersonsListResultFilter))]
         public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.PersonName), SortOrderOptions sortOrder = SortOrderOptions.ASC)
         {
             _logger.LogInformation("Index method of PersonsController entered");

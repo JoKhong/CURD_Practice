@@ -1,4 +1,5 @@
 ﻿using CURD_Practice.Filters.ActionFilters;
+using CURD_Practice.Filters.AlwaysRunResultFilter;
 using CURD_Practice.Filters.AuthorizationFilters;
 using CURD_Practice.Filters.ExceptionFilters;
 using CURD_Practice.Filters.ResourceFilters;
@@ -13,6 +14,8 @@ using ServiceContracts.Enums;
 using System.Globalization;
 using System.Threading.Tasks;
 
+using CURD_Practice.Filters;
+
 namespace CURD_Practice.Controllers
 {
     //TypeFilters Orders follow a = Last in, First out
@@ -22,6 +25,7 @@ namespace CURD_Practice.Controllers
     //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Controller-Key", "X-Controller-Value" })]
     [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Controller-Key", "X-Controller-Value" , 1}, Order = 1)] //Force Set order 
     [TypeFilter(typeof(HandleExceptionFilter))]
+    [TypeFilter(typeof(PersonsAlwaysRunsResultFilter))]
     public class PersonsController : Controller
     {
         private readonly IPersonsServices _personsServices;
@@ -42,6 +46,7 @@ namespace CURD_Practice.Controllers
         //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Action-Key", "X-Action-Value"})]
         [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Action-Key", "X-Action-Value" , 2} , Order = 2)] // Force Set order 
         [TypeFilter(typeof(PersonsListResultFilter))]
+        [SkipFilter]
         public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.PersonName), SortOrderOptions sortOrder = SortOrderOptions.ASC)
         {
             _logger.LogInformation("Index method of PersonsController entered");

@@ -11,8 +11,12 @@ using CURD_Practice.Filters.ActionFilters;
 
 namespace CURD_Practice.Controllers
 {
+    //TypeFilters Orders follow a = Last in, First out
+    //Execute from lowest to highest
+
     [Route("[controller]")]
     [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Controller-Key", "X-Controller-Value" })]
+    //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Controller-Key", "X-Controller-Value" , 2}, Order = 2)] //Force Set order 
     public class PersonsController : Controller
     {
         private readonly IPersonsServices _personsServices;
@@ -30,7 +34,8 @@ namespace CURD_Practice.Controllers
         [Route("[action]")]
         [Route("/")]
         [TypeFilter(typeof(PersonsListActionFilter))]
-        [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Action-Key", "X-Action-Value"} )]
+        [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Action-Key", "X-Action-Value"})]
+        //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Action-Key", "X-Action-Value" , 1} , Order = 1)] // Force Set order 
         public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.PersonName), SortOrderOptions sortOrder = SortOrderOptions.ASC)
         {
             _logger.LogInformation("Index method of PersonsController entered");

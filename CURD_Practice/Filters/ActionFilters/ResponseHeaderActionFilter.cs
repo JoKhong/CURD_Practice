@@ -3,18 +3,22 @@ using Microsoft.Identity.Client;
 
 namespace CURD_Practice.Filters.ActionFilters
 {
-    public class ResponseHeaderActionFilter : IActionFilter
+    public class ResponseHeaderActionFilter : IActionFilter, IOrderedFilter
     {
         private readonly ILogger<ResponseHeaderActionFilter> _logger;
 
         private readonly string _key;
         private readonly string _value;
 
-        public ResponseHeaderActionFilter(ILogger<ResponseHeaderActionFilter> logger, string key, string value)
+        public int Order { get; set; }
+
+        public ResponseHeaderActionFilter(ILogger<ResponseHeaderActionFilter> logger, string key, string value , int order)
         {
             _logger = logger;
             _key = key;
             _value = value;
+
+            Order = order;
         }
 
         public void OnActionExecuting(ActionExecutingContext context)

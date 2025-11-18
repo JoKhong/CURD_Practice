@@ -23,7 +23,7 @@ builder.Host.UseSerilog( (HostBuilderContext context, IServiceProvider services,
 builder.Services.AddControllersWithViews( options => {
 
     var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
-    options.Filters.Add(new ResponseHeaderActionFilter(logger, "X-Global-Key", "X-Global-Value"));
+    options.Filters.Add(new ResponseHeaderActionFilter(logger, "X-Global-Key", "X-Global-Value" , 0));
 
 });
 

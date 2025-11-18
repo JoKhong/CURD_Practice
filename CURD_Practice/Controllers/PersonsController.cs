@@ -1,5 +1,6 @@
 ﻿using CURD_Practice.Filters.ActionFilters;
 using CURD_Practice.Filters.AuthorizationFilters;
+using CURD_Practice.Filters.ExceptionFilters;
 using CURD_Practice.Filters.ResourceFilters;
 using CURD_Practice.Filters.ResultFilters;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,7 @@ namespace CURD_Practice.Controllers
     [Route("[controller]")]
     //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Controller-Key", "X-Controller-Value" })]
     [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Controller-Key", "X-Controller-Value" , 1}, Order = 1)] //Force Set order 
+    [TypeFilter(typeof(HandleExceptionFilter))]
     public class PersonsController : Controller
     {
         private readonly IPersonsServices _personsServices;

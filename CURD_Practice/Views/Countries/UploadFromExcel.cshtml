@@ -2,9 +2,22 @@
     ViewBag.Title = "Upload Countries from Excel";
 }
 
-<h2>Upload Countries from Excel</h2>
+<div class="flex">
+    <div class="flex-1">
+        <span class="text-grey">Contacts</span>
+        <i class="fa-solid fa-caret-right"></i>
+        <span class="text-grey">Countries</span>
+        <i class="fa-solid fa-caret-right"></i>
+        <span class="text-grey">Upload</span>
+    </div>
+</div>
 
-<div class="w-50">
+<h2 class="text-large">Upload Countries from Excel</h2>
+
+<div class="form-container">
+
+    <a asp-controller="Persons" asp-action="Index" class="link-hover button-link button-blue-back">Back to Persons List</a>
+
     <form asp-action="UploadFromExcel" asp-controller="Countries" method="post" enctype="multipart/form-data">
 
         @* ExcelFile *@

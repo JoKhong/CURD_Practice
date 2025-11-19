@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.IdentityModel.Tokens;
 using ServiceContracts.DTO;
+using ServiceContracts.Enums;
 
 namespace CURD_Practice.Filters.ActionFilters
 {
@@ -82,10 +83,18 @@ namespace CURD_Practice.Filters.ActionFilters
                 {
                     personsController.ViewData["CurrentSortBy"] = Convert.ToString(parameters["sortBy"]) ;
                 }
+                else
+                {
+                    personsController.ViewData["CurrentSortBy"] = nameof(PersonResponse.PersonName);
+                }
 
                 if (parameters.ContainsKey("sortOrder"))
                 {
                     personsController.ViewData["CurrentSortOrder"] = Convert.ToString(parameters["sortOrder"]);
+                }
+                else
+                {
+                    personsController.ViewData["CurrentSortOrder"] = nameof(SortOrderOptions.ASC);
                 }
             }
 

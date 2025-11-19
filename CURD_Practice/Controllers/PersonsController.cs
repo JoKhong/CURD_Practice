@@ -111,8 +111,11 @@ namespace CURD_Practice.Controllers
         //[TypeFilter(typeof(FeatureDisableResourceFilter), Arguments = new object[] { true })]
         public async Task<IActionResult> Create(PersonAddRequest personRequest)
         {  
+            if(ModelState.IsValid == false)
+                return View(personRequest);
+
             await _personsServices.AddPerson(personRequest);
-            return RedirectToAction("Index", "Persons");
+                return RedirectToAction("Index", "Persons");
         }
 
         [Route("[action]/{personId}")]

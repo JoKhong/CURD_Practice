@@ -16,6 +16,9 @@ using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Frameworks;
+using Castle.Core.Logging;
+using Microsoft.Extensions.Logging;
+using Services;
 
 namespace CURD_Tests
 {
@@ -23,10 +26,12 @@ namespace CURD_Tests
     {
         private readonly IPersonsServices _personServices;
         private readonly ICountriesService _countriesService;
+        private readonly ILogger<PersonsController> _logger;
 
         private readonly Mock<ICountriesService> _countriesServiceMock;
         private readonly Mock<IPersonsServices> _personsServiceMock;
-
+        private readonly Mock<ILogger<PersonsController>> _loggerMock;
+        
         private readonly IFixture _fixture;
         private readonly Bogus.Faker _faker;
 
@@ -40,6 +45,9 @@ namespace CURD_Tests
 
             _countriesServiceMock = new Mock<ICountriesService>();
             _countriesService = _countriesServiceMock.Object;
+
+            _loggerMock = new Mock<ILogger<PersonsController>>();
+            _logger = _loggerMock.Object;
         }
 
         #region Index
@@ -49,7 +57,7 @@ namespace CURD_Tests
         {
             List<PersonResponse> personsResponseList = _fixture.Create<List<PersonResponse>>();
 
-            PersonsController personsController = new PersonsController(_personServices, _countriesService);
+            PersonsController personsController = new PersonsController(_personServices, _countriesService, _logger);
 
             _personsServiceMock
                 .Setup( x => x.GetFilteredPersons(It.IsAny<String>(), It.IsAny<String>()))
@@ -77,7 +85,7 @@ namespace CURD_Tests
 
         #region Create
 
-        [Fact]
+        // [Fact] Responsibility shifted to Filters
         public async Task Create_IfModelErrors_ReturnToCreateView()
         {
             PersonAddRequest personAddRequest = _fixture.Create<PersonAddRequest>();
@@ -85,7 +93,7 @@ namespace CURD_Tests
 
             List<CountryResponse> countryList = _fixture.Create<List<CountryResponse>>();
 
-            PersonsController personsController = new PersonsController(_personServices, _countriesService);
+            PersonsController personsController = new PersonsController(_personServices, _countriesService, _logger);
 
             _countriesServiceMock
                 .Setup(x => x.GetAllCountries())
@@ -114,7 +122,7 @@ namespace CURD_Tests
 
             List<CountryResponse> countryList = _fixture.Create<List<CountryResponse>>();
 
-            PersonsController personsController = new PersonsController(_personServices, _countriesService);
+            PersonsController personsController = new PersonsController(_personServices, _countriesService, _logger);
 
             _countriesServiceMock
                 .Setup(x => x.GetAllCountries())

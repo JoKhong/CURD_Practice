@@ -23,7 +23,8 @@ namespace CURD_Practice.Controllers
 
     [Route("[controller]")]
     //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Controller-Key", "X-Controller-Value" })]
-    [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Controller-Key", "X-Controller-Value" , 1}, Order = 1)] //Force Set order 
+    //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Controller-Key", "X-Controller-Value" , 1}, Order = 1)] //Force Set order 
+    [ResponseHeaderFilterFactoryAttribute("X-Controller-Key", "X-Controller-Value", 1)]
     [TypeFilter(typeof(HandleExceptionFilter))]
     //[TypeFilter(typeof(PersonsAlwaysRunsResultFilter))]
     public class PersonsController : Controller
@@ -44,7 +45,8 @@ namespace CURD_Practice.Controllers
         [Route("/")]
         [TypeFilter(typeof(PersonsListActionFilter))]
         //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Action-Key", "X-Action-Value"})]
-        [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Action-Key", "X-Action-Value" , 2} , Order = 2)] // Force Set order 
+        //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Action-Key", "X-Action-Value" , 2} , Order = 2)] // Force Set order 
+        [ResponseHeaderFilterFactoryAttribute("X-Action-Key", "X-Action-Value", 2)]
         [TypeFilter(typeof(PersonsListResultFilter))]
         [SkipFilter]
         public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.PersonName), SortOrderOptions sortOrder = SortOrderOptions.ASC)

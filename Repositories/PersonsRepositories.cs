@@ -35,7 +35,6 @@ namespace Repositories
         public async Task<List<Person>> GetAllPersons()
         {
             _logger.LogInformation("GetAllPersons of PersonsRepositories");
-
             return await _db.Persons.Include("Country").ToListAsync();
         }
 

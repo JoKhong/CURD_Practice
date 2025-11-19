@@ -25,11 +25,12 @@ namespace CURD_Practice.Controllers
     //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Controller-Key", "X-Controller-Value" })]
     //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Controller-Key", "X-Controller-Value" , 1}, Order = 1)] //Force Set order 
     [ResponseHeaderFilterFactoryAttribute("X-Controller-Key", "X-Controller-Value", 1)]
-    [TypeFilter(typeof(HandleExceptionFilter))]
+    //[TypeFilter(typeof(HandleExceptionFilter))]
     //[TypeFilter(typeof(PersonsAlwaysRunsResultFilter))]
     public class PersonsController : Controller
     {
         private readonly IPersonsServices _personsServices;
+
         private readonly ICountriesService _countratesServices;
 
         private readonly ILogger<PersonsController> _logger;

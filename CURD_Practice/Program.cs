@@ -11,6 +11,7 @@ using Serilog.AspNetCore;
 using CURD_Practice.Filters.ActionFilters;
 
 using CURD_Practice;
+using CURD_Practice.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,18 +27,24 @@ builder.Services.ConfigureServices( builder.Configuration , builder.Environment 
 
 var app = builder.Build();
 
-app.UseSerilogRequestLogging();
-
 if(builder.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+else
+{
+    app.UseExceptionHandler("/Error");
+    app.UseExceptionHandelingMiddleware();
+}
+   
+app.UseSerilogRequestLogging();
 
-if(builder.Environment.IsEnvironment("Test") == false)
+if (builder.Environment.IsEnvironment("Test") == false)
+{
     Rotativa.AspNetCore.RotativaConfiguration.Setup("wwwroot", wkhtmltopdfRelativePath: "Rotativa");
+}
 
 app.UseHttpLogging();
-
 app.UseStaticFiles();
 app.UseRouting();
 app.MapControllers();

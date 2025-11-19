@@ -16,6 +16,7 @@ using System.Formats.Asn1;
 using System.Globalization;
 
 using SerilogTimings;
+using Exceptions;
 
 namespace Services
 {
@@ -226,7 +227,7 @@ namespace Services
             Person? matchingPerson = await _personRepository.GetPersonById(updateRequest.PersonId);
 
             if (matchingPerson == null)
-                throw new ArgumentException("Given Id dose not exist");
+                throw new InvalidPersonIdExceptions("Given Id dose not exist");
 
             try 
             {

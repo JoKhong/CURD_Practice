@@ -10,20 +10,46 @@
 </head>
 <body>
     <div class="container">
-        <div class="navbar">
-            <div class="navbar-brand">CRUD Demo
-                @* <img src="~/logo.png" width="25px" asp-append-version="true" /> *@
-            </div>
-            <ul>
-                <li>
-                    <a asp-controller="Persons" asp-action="Index">Persons</a>
-                    <a asp-controller="Countries" asp-action="UploadFromExcel">Upload Countries</a>
-                </li>
-            </ul>
-        </div>
-
         <div class="page-content">
-            @RenderBody()
+
+            <div class="margin-bottom">
+                <div class="flex pl" id="top-bar-div">
+                    
+                    <div class="flex-1" id="app-title-div">
+                        <h1 class="app-title">
+                            <i class="fa-solid fa-people fa-people-simple">Contact Manager</i>
+                        </h1>
+                    </div>
+                    
+                    <div class="flex-1 pr" id="search-box-div">
+                        <div class="navbar account-links">
+                            <ul>
+                                <li>
+                                    <a asp-controller="Account" asp-action="Register">Register</a>
+                                    <a asp-controller="Account" asp-action="Login">Login</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+                
+
+            </div>
+
+            <div class="navbar mb">
+                <ul>
+                    <li>
+                        <a asp-controller="Persons" asp-action="Index">Persons</a>
+                        <a asp-controller="Countries" asp-action="UploadFromExcel">Upload Countries</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="body">
+                @RenderBody()
+            </div>
         </div>
     </div>
 

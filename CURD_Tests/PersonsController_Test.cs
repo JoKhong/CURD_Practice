@@ -24,14 +24,33 @@ namespace CURD_Tests
 {
     public class PersonsController_Test
     {
-        private readonly IPersonsServices _personServices;
-        private readonly ICountriesService _countriesService;
-        private readonly ILogger<PersonsController> _logger;
+        private readonly IPersonAdderService _personAdderService;
+        private readonly Mock<IPersonAdderService> _personAdderServiceMock;
 
-        private readonly Mock<ICountriesService> _countriesServiceMock;
-        private readonly Mock<IPersonsServices> _personsServiceMock;
+        private readonly IPersonGetterServices _personGetterServices;
+        private readonly Mock<IPersonGetterServices> _personGetterServicesMock;
+
+        private readonly IPersonSortPersonsService _personSortedPersonsServices;
+        private readonly Mock<IPersonSortPersonsService> _personSortedPersonsServicesMock;
+
+        private readonly IPersonUpdatePersonService _personUpdatePersonService;
+        private readonly Mock<IPersonUpdatePersonService> _personUpdatePersonServiceMock;
+
+        private readonly IPersonDeletePersonService _personDeletePersonService;
+        private readonly Mock<IPersonDeletePersonService> _personDeletePersonServiceMock;
+
+        private readonly IPersonsToCSVService _personsToCSVService;
+        private readonly Mock<IPersonsToCSVService> _personsToCSVServiceMock;
+
+        private readonly IPersonsToExcelService _personsToExcelService;
+        private readonly Mock<IPersonsToExcelService> _personsToExcelServiceMock;
+
+        private readonly ICountryGetCountriesServices _countryGetCountriesServices;
+        private readonly Mock<ICountryGetCountriesServices> _countryGetCountriesServicesMock;
+
+        private readonly ILogger<PersonsController> _logger;
         private readonly Mock<ILogger<PersonsController>> _loggerMock;
-        
+
         private readonly IFixture _fixture;
         private readonly Bogus.Faker _faker;
 
@@ -40,11 +59,29 @@ namespace CURD_Tests
             _faker = new Bogus.Faker();
             _fixture = new Fixture();
 
-            _personsServiceMock = new Mock<IPersonsServices>();
-            _personServices = _personsServiceMock.Object;
+            _personAdderServiceMock = new Mock<IPersonAdderService>();
+            _personAdderService = _personAdderServiceMock.Object;
 
-            _countriesServiceMock = new Mock<ICountriesService>();
-            _countriesService = _countriesServiceMock.Object;
+            _personGetterServicesMock = new Mock<IPersonGetterServices>();
+            _personGetterServices = _personGetterServicesMock.Object;
+
+            _personSortedPersonsServicesMock = new Mock<IPersonSortPersonsService>();
+            _personSortedPersonsServices = _personSortedPersonsServicesMock.Object;
+
+            _personUpdatePersonServiceMock = new Mock<IPersonUpdatePersonService>();
+            _personUpdatePersonService = _personUpdatePersonServiceMock.Object;
+
+            _personDeletePersonServiceMock = new Mock<IPersonDeletePersonService>();
+            _personDeletePersonService = _personDeletePersonServiceMock.Object;
+
+            _personsToCSVServiceMock = new Mock<IPersonsToCSVService>();
+            _personsToCSVService = _personsToCSVServiceMock.Object;
+
+            _personsToExcelServiceMock = new Mock<IPersonsToExcelService>();
+            _personsToExcelService = _personsToExcelServiceMock.Object;
+
+            _countryGetCountriesServicesMock = new Mock<ICountryGetCountriesServices>();
+            _countryGetCountriesServices = _countryGetCountriesServicesMock.Object;
 
             _loggerMock = new Mock<ILogger<PersonsController>>();
             _logger = _loggerMock.Object;
@@ -57,13 +94,22 @@ namespace CURD_Tests
         {
             List<PersonResponse> personsResponseList = _fixture.Create<List<PersonResponse>>();
 
-            PersonsController personsController = new PersonsController(_personServices, _countriesService, _logger);
+            PersonsController personsController = new PersonsController(
+                _personAdderService, 
+                _personGetterServices, 
+                _personSortedPersonsServices, 
+                _personUpdatePersonService, 
+                _personDeletePersonService, 
+                _personsToCSVService , 
+                _personsToExcelService, 
+                _countryGetCountriesServices, 
+                _logger);
 
-            _personsServiceMock
+            _personGetterServicesMock
                 .Setup( x => x.GetFilteredPersons(It.IsAny<String>(), It.IsAny<String>()))
                 .ReturnsAsync(personsResponseList);
 
-            _personsServiceMock.Setup(x => x.GetSortedPersons( It.IsAny<List<PersonResponse>>(), It.IsAny<string>(), It.IsAny<SortOrderOptions>()  ))
+            _personSortedPersonsServicesMock.Setup(x => x.GetSortedPersons( It.IsAny<List<PersonResponse>>(), It.IsAny<string>(), It.IsAny<SortOrderOptions>()  ))
                 .ReturnsAsync(personsResponseList);
 
             IActionResult result = await personsController.Index(
@@ -93,13 +139,22 @@ namespace CURD_Tests
 
             List<CountryResponse> countryList = _fixture.Create<List<CountryResponse>>();
 
-            PersonsController personsController = new PersonsController(_personServices, _countriesService, _logger);
+            PersonsController personsController = new PersonsController(
+               _personAdderService,
+               _personGetterServices,
+               _personSortedPersonsServices,
+               _personUpdatePersonService,
+               _personDeletePersonService,
+               _personsToCSVService,
+               _personsToExcelService,
+               _countryGetCountriesServices,
+               _logger);
 
-            _countriesServiceMock
-                .Setup(x => x.GetAllCountries())
+            _countryGetCountriesServicesMock
+                .Setup(x => x.GetCountriesAll())
                 .ReturnsAsync(countryList);
 
-            _personsServiceMock
+            _personAdderServiceMock
                 .Setup(x => x.AddPerson(It.IsAny<PersonAddRequest>()))
                 .ReturnsAsync(personResponse);
 
@@ -122,13 +177,22 @@ namespace CURD_Tests
 
             List<CountryResponse> countryList = _fixture.Create<List<CountryResponse>>();
 
-            PersonsController personsController = new PersonsController(_personServices, _countriesService, _logger);
+            PersonsController personsController = new PersonsController(
+                _personAdderService,
+                _personGetterServices,
+                _personSortedPersonsServices,
+                _personUpdatePersonService,
+                _personDeletePersonService,
+                _personsToCSVService,
+                _personsToExcelService,
+                _countryGetCountriesServices,
+                _logger);
 
-            _countriesServiceMock
-                .Setup(x => x.GetAllCountries())
+            _countryGetCountriesServicesMock
+                .Setup(x => x.GetCountriesAll())
                 .ReturnsAsync(countryList);
 
-            _personsServiceMock
+            _personAdderServiceMock
                 .Setup(x => x.AddPerson(It.IsAny<PersonAddRequest>()))
                 .ReturnsAsync(personResponse);
 

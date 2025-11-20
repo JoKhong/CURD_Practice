@@ -33,7 +33,7 @@ namespace CURD_Practice.Controllers
 
         private readonly IPersonAdderService _personAdderService;
         private readonly IPersonGetterServices _personGetPersonsServices;
-        private readonly IPersonGetSortedPersonsService _personGetSortedPersonsServices;
+        private readonly IPersonSortPersonsService _personGetSortedPersonsServices;
         private readonly IPersonUpdatePersonService _personUpdatePersonService;
         private readonly IPersonDeletePersonService _personDeletePersonService;
 
@@ -46,7 +46,7 @@ namespace CURD_Practice.Controllers
 
         public PersonsController(IPersonAdderService personAdderService
             , IPersonGetterServices personGetPersonsServices
-            , IPersonGetSortedPersonsService personGetSortedPersonsService
+            , IPersonSortPersonsService personGetSortedPersonsService
             , IPersonUpdatePersonService personUpdatePersonService
             , IPersonDeletePersonService personDeletePersonService
             , IPersonsToCSVService personGetPersonsCSVService

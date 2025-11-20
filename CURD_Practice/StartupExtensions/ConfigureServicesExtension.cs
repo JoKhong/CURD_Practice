@@ -57,7 +57,7 @@ namespace CURD_Practice
             services.AddScoped<IPersonsServices, PersonServices>();
             services.AddScoped<IPersonAdderService, PersonAdderService>();
             services.AddScoped<IPersonGetterServices, PersonGetPersonsService>();
-            services.AddScoped<IPersonGetSortedPersonsService, PersonGetSortedPersonsService>();
+            services.AddScoped<IPersonSortPersonsService, PersonSortPersonsService>();
             services.AddScoped<IPersonUpdatePersonService, PersonUpdatePersonService>();
             services.AddScoped<IPersonDeletePersonService, PersonDeletePersonService>();
 

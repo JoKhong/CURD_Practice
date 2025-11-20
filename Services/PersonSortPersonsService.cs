@@ -20,15 +20,15 @@ using Exceptions;
 
 namespace Services
 {
-    public class PersonGetSortedPersonsService : IPersonGetSortedPersonsService
+    public class PersonSortPersonsService : IPersonSortPersonsService
     {
         private readonly IPersonsRepository _personRepository;
 
-        private readonly ILogger<PersonGetSortedPersonsService> _logger;
+        private readonly ILogger<PersonSortPersonsService> _logger;
 
         private readonly IDiagnosticContext _diagnosticContext;
 
-        public PersonGetSortedPersonsService(IPersonsRepository personRepo, ILogger<PersonGetSortedPersonsService> logger, IDiagnosticContext diagContext)
+        public PersonSortPersonsService(IPersonsRepository personRepo, ILogger<PersonSortPersonsService> logger, IDiagnosticContext diagContext)
         {
             _personRepository = personRepo;
             _logger = logger;

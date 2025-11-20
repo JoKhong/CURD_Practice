@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ServiceContracts
 {
-    public interface IPersonGetSortedPersonsService
+    public interface IPersonSortPersonsService
     {
         /// <summary>
         /// Returns sorted list of persons

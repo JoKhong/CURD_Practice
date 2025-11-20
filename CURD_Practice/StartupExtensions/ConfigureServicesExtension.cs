@@ -55,7 +55,15 @@ namespace CURD_Practice
 
             //Persons Serivces
             services.AddScoped<IPersonsServices, PersonServices>();
-            //services.AddScoped<>()
+            services.AddScoped<IPersonAdderService, PersonAdderService>();
+            services.AddScoped<IPersonGetPersonsServices, PersonGetPersonsService>();
+            services.AddScoped<IPersonGetSortedPersonsService, PersonGetSortedPersonsService>();
+            services.AddScoped<IPersonUpdatePersonService, PersonUpdatePersonService>();
+            services.AddScoped<IPersonDeletePersonService, PersonDeletePersonService>();
+
+            //Additional Services
+            services.AddScoped<IPersonGetPersonsCSVService, PersonGetPersonsCSVService>();
+            services.AddScoped<IPersonGetPersonsExcelService, PersonGetPersonsExcelService>();
 
             //Add Manual, Useful when constructor has other parameters or want control. 
             //BUT NOT RECOMMENDED

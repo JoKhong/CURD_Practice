@@ -1,4 +1,5 @@
-﻿using CURD_Practice.Filters.ActionFilters;
+﻿using CURD_Practice.Filters;
+using CURD_Practice.Filters.ActionFilters;
 using CURD_Practice.Filters.AlwaysRunResultFilter;
 using CURD_Practice.Filters.AuthorizationFilters;
 using CURD_Practice.Filters.ExceptionFilters;
@@ -11,10 +12,9 @@ using Rotativa.AspNetCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
+using Services;
 using System.Globalization;
 using System.Threading.Tasks;
-
-using CURD_Practice.Filters;
 
 namespace CURD_Practice.Controllers
 {
@@ -29,18 +29,42 @@ namespace CURD_Practice.Controllers
     //[TypeFilter(typeof(PersonsAlwaysRunsResultFilter))]
     public class PersonsController : Controller
     {
-        private readonly IPersonsServices _personsServices;
+        //private readonly IPersonsServices _personsServices;
 
-        //private readonly ICountriesService _countratesServices;
+        private readonly IPersonAdderService _personAdderService;
+        private readonly IPersonGetPersonsServices _personGetPersonsServices;
+        private readonly IPersonGetSortedPersonsService _personGetSortedPersonsServices;
+        private readonly IPersonUpdatePersonService _personUpdatePersonService;
+        private readonly IPersonDeletePersonService _personDeletePersonService;
+
+        private readonly IPersonGetPersonsCSVService _personGetPersonsCSVService;
+        private readonly IPersonGetPersonsExcelService _personGetPersonsExcelService;
+
         private readonly ICountryGetCountriesServices _countryGetCountriesServices;
 
         private readonly ILogger<PersonsController> _logger;
 
-        public PersonsController(IPersonsServices personsServices, ICountryGetCountriesServices countryGetCountriesServices, ILogger<PersonsController> logger)
+        public PersonsController(IPersonAdderService personAdderService
+            , IPersonGetPersonsServices personGetPersonsServices
+            , IPersonGetSortedPersonsService personGetSortedPersonsService
+            , IPersonUpdatePersonService personUpdatePersonService
+            , IPersonDeletePersonService personDeletePersonService
+            , IPersonGetPersonsCSVService personGetPersonsCSVService
+            , IPersonGetPersonsExcelService personGetPersonsExcelService
+            , ICountryGetCountriesServices countryGetCountriesServices
+            , ILogger<PersonsController> logger)
         {
-            _personsServices = personsServices;
+            _personAdderService = personAdderService;
+            _personGetPersonsServices = personGetPersonsServices;
+            _personGetSortedPersonsServices = personGetSortedPersonsService;
+            _personUpdatePersonService = personUpdatePersonService;
+            _personDeletePersonService = personDeletePersonService;
+
+            _personGetPersonsCSVService = personGetPersonsCSVService;
+            _personGetPersonsExcelService = personGetPersonsExcelService;
+
             _countryGetCountriesServices = countryGetCountriesServices;
-            //_countratesServices = countratesServices;
+
             _logger = logger;
         }
 
@@ -77,8 +101,8 @@ namespace CURD_Practice.Controllers
             };
             */
 
-            List<PersonResponse> responsePersons = await _personsServices.GetFilteredPersons(searchBy, searchString);//Filter 
-            List<PersonResponse> sortedPersons = await _personsServices.GetSortedPersons(responsePersons, sortBy, sortOrder);//Sort
+            List<PersonResponse> responsePersons = await _personGetPersonsServices.GetFilteredPersons(searchBy, searchString);//Filter 
+            List<PersonResponse> sortedPersons = await _personGetSortedPersonsServices.GetSortedPersons(responsePersons, sortBy, sortOrder);//Sort
             
             /* Done in ActionFilter
                         ViewBag.CurrentSearchBy = searchBy;
@@ -117,7 +141,7 @@ namespace CURD_Practice.Controllers
             if(ModelState.IsValid == false)
                 return View(personRequest);
 
-            await _personsServices.AddPerson(personRequest);
+            await _personAdderService.AddPerson(personRequest);
                 return RedirectToAction("Index", "Persons");
         }
 
@@ -126,7 +150,7 @@ namespace CURD_Practice.Controllers
         [TypeFilter(typeof(TokenResultFilter))]//Add cookie during get
         public async Task<IActionResult> Edit(Guid personId)
         {
-            PersonResponse? personById = await _personsServices.GetPersonById(personId);
+            PersonResponse? personById = await _personGetPersonsServices.GetPersonById(personId);
 
             if(personById == null)
                 return RedirectToAction("Index", "Persons");
@@ -153,12 +177,12 @@ namespace CURD_Practice.Controllers
         [TypeFilter(typeof(TokenAuthorizationFileter))]//Authorize update
         public async Task<IActionResult> Edit(PersonUpdateRequest personRequest)
         {
-            PersonResponse? response = await _personsServices.GetPersonById(personRequest.PersonId);
+            PersonResponse? response = await _personGetPersonsServices.GetPersonById(personRequest.PersonId);
 
             if (response == null)
                 return RedirectToAction("Index");
 
-            await _personsServices.UpdatePerson(personRequest);
+            await _personUpdatePersonService.UpdatePerson(personRequest);
             return RedirectToAction("Index", "Persons");
         }
 
@@ -166,7 +190,7 @@ namespace CURD_Practice.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(Guid personId)
         {
-            PersonResponse? personById = await _personsServices.GetPersonById(personId);
+            PersonResponse? personById = await _personGetPersonsServices.GetPersonById(personId);
 
             if (personById == null)
                 return RedirectToAction("Index", "Persons");
@@ -191,18 +215,18 @@ namespace CURD_Practice.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(PersonUpdateRequest deleteRequest)
         {
-            PersonResponse? personResponse = await _personsServices.GetPersonById(deleteRequest.PersonId);
+            PersonResponse? personResponse = await _personGetPersonsServices.GetPersonById(deleteRequest.PersonId);
             if (personResponse == null)
                 return RedirectToAction("Index", "Persons");
 
-            await _personsServices.DeletePerson(deleteRequest.PersonId);
+            await _personDeletePersonService.DeletePerson(deleteRequest.PersonId);
             return RedirectToAction("Index", "Persons");
         }
 
         [Route("[action]")]
         public async Task<IActionResult> PersonsPdf() 
         {
-            List<PersonResponse> responsePersons = await _personsServices.GetAllPersons();
+            List<PersonResponse> responsePersons = await _personGetPersonsServices.GetAllPersons();
 
             ViewAsPdf viewAsPdf = new ViewAsPdf("PersonsPdf", responsePersons, ViewData)
             {
@@ -217,21 +241,14 @@ namespace CURD_Practice.Controllers
         [Route("[action]")]
         public async Task<IActionResult> PersonsCsv()
         {
-            MemoryStream stream =  await _personsServices.GetPersonsCSV();
-            return File(stream, "application/octet-stream", "persons.csv");
-        }
-
-        [Route("[action]")]
-        public async Task<IActionResult> PersonsCsvCustom()
-        {
-            MemoryStream stream = await _personsServices.GetPersonsCSVCustom();
+            MemoryStream stream =  await _personGetPersonsCSVService.GetPersonsCSV(await _personGetPersonsServices.GetAllPersons());
             return File(stream, "application/octet-stream", "persons.csv");
         }
 
         [Route("[action]")]
         public async Task<IActionResult> PersonsExcel()
         {
-            MemoryStream stream = await _personsServices.GetPersonsExcel();
+            MemoryStream stream = await _personGetPersonsExcelService.GetPersonsExcel(await _personGetPersonsServices.GetAllPersons());
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "persons.xlsx");
         }
 

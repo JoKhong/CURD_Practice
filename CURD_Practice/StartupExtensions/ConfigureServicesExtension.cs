@@ -54,9 +54,8 @@ namespace CURD_Practice
             services.AddScoped<ICountryUploadFromExcelService, CountryUploadFromExcelService>();
 
             //Persons Serivces
-            services.AddScoped<IPersonsServices, PersonServices>();
             services.AddScoped<IPersonAdderService, PersonAdderService>();
-            services.AddScoped<IPersonGetterServices, PersonGetPersonsService>();
+            services.AddScoped<IPersonGetterServices, PersonGetterServices>();
             services.AddScoped<IPersonSortPersonsService, PersonSortPersonsService>();
             services.AddScoped<IPersonUpdatePersonService, PersonUpdatePersonService>();
             services.AddScoped<IPersonDeletePersonService, PersonDeletePersonService>();

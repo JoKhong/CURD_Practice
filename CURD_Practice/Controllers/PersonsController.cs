@@ -31,14 +31,16 @@ namespace CURD_Practice.Controllers
     {
         private readonly IPersonsServices _personsServices;
 
-        private readonly ICountriesService _countratesServices;
+        //private readonly ICountriesService _countratesServices;
+        private readonly ICountryGetCountriesServices _countryGetCountriesServices;
 
         private readonly ILogger<PersonsController> _logger;
 
-        public PersonsController(IPersonsServices personsServices, ICountriesService countratesServices, ILogger<PersonsController> logger)
+        public PersonsController(IPersonsServices personsServices, ICountryGetCountriesServices countryGetCountriesServices, ILogger<PersonsController> logger)
         {
             _personsServices = personsServices;
-            _countratesServices = countratesServices;
+            _countryGetCountriesServices = countryGetCountriesServices;
+            //_countratesServices = countratesServices;
             _logger = logger;
         }
 
@@ -75,7 +77,7 @@ namespace CURD_Practice.Controllers
             };
             */
 
-            List <PersonResponse> responsePersons = await _personsServices.GetFilteredPersons(searchBy, searchString);//Filter 
+            List<PersonResponse> responsePersons = await _personsServices.GetFilteredPersons(searchBy, searchString);//Filter 
             List<PersonResponse> sortedPersons = await _personsServices.GetSortedPersons(responsePersons, sortBy, sortOrder);//Sort
             
             /* Done in ActionFilter
@@ -92,7 +94,7 @@ namespace CURD_Practice.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            List<CountryResponse> allCountires = await _countratesServices.GetAllCountries();
+            List<CountryResponse> allCountires = await _countryGetCountriesServices.GetCountriesAll();
 
             IEnumerable <SelectListItem> selectCountires =
                 allCountires.Select(aCountry => new SelectListItem() 
@@ -131,7 +133,7 @@ namespace CURD_Practice.Controllers
 
             PersonUpdateRequest updateRequest = personById.ToPersonUpdateRequest();
 
-            List<CountryResponse> allCountries = await _countratesServices.GetAllCountries();
+            List<CountryResponse> allCountries = await _countryGetCountriesServices.GetCountriesAll();
 
             IEnumerable <SelectListItem> selectCountires =
                 allCountries.Select(aCountry => new SelectListItem()
@@ -171,7 +173,7 @@ namespace CURD_Practice.Controllers
 
             PersonUpdateRequest updateRequest = personById.ToPersonUpdateRequest();
 
-            List<CountryResponse> allCountries = await _countratesServices.GetAllCountries();
+            List<CountryResponse> allCountries = await _countryGetCountriesServices.GetCountriesAll();
 
             IEnumerable <SelectListItem> selectCountires = 
                 allCountries.Select(aCountry => new SelectListItem()

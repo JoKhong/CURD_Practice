@@ -8,11 +8,11 @@ namespace CURD_Practice.Filters.ActionFilters
 {
     public class PersonCreateAndEditPostActionFilter : IAsyncActionFilter
     {
-        private readonly ICountriesService _countriesService;
+        private readonly ICountryGetCountriesServices _countryGetCountriesServices;
 
-        public PersonCreateAndEditPostActionFilter(ICountriesService countriesService)
+        public PersonCreateAndEditPostActionFilter(ICountryGetCountriesServices countryGeetCountriesServices)
         {
-            _countriesService = countriesService;
+            _countryGetCountriesServices = countryGeetCountriesServices;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -21,7 +21,7 @@ namespace CURD_Practice.Filters.ActionFilters
             {
                 if(!personsController.ModelState.IsValid)
                 {
-                    List<CountryResponse> allCountires = await _countriesService.GetAllCountries();
+                    List<CountryResponse> allCountires = await _countryGetCountriesServices.GetCountriesAll();
 
                     IEnumerable<SelectListItem> selectCountires =
                         allCountires.Select(aCountry => new SelectListItem()

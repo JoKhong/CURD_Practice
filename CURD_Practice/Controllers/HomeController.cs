@@ -8,7 +8,7 @@ namespace CURD_Practice.Controllers
         [Route("Error")]
         public IActionResult Error()
         {
-            IExceptionHandlerPathFeature excpetionHandlePathFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+            IExceptionHandlerPathFeature? excpetionHandlePathFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
             
             if(excpetionHandlePathFeature != null && excpetionHandlePathFeature.Error != null)
             {

@@ -48,13 +48,14 @@ namespace CURD_Practice
             services.AddScoped<ICountriesRepository, CountriesRepositories>();
             services.AddScoped<IPersonsRepository, PersonsRepositories>();
 
-            services.AddScoped<ICountriesService, CountryServices>();
+            //Countries Services
             services.AddScoped<ICountryAdderService, CountryAdderService>();
-            services.AddScoped<ICountryGetAllCountriesService, CountryGetAllCountriesService>();
-            services.AddScoped<ICountryGetByIdService, CountryGetByIdService>();
+            services.AddScoped<ICountryGetCountriesServices, CountryGetCountriesService>();
             services.AddScoped<ICountryUploadFromExcelService, CountryUploadFromExcelService>();
 
+            //Persons Serivces
             services.AddScoped<IPersonsServices, PersonServices>();
+            //services.AddScoped<>()
 
             //Add Manual, Useful when constructor has other parameters or want control. 
             //BUT NOT RECOMMENDED

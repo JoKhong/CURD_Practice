@@ -8,11 +8,15 @@ namespace CURD_Practice.Controllers
 
     public class CountriesController : Controller
     {
-        private readonly ICountriesService _countratesServices;
+        //private readonly ICountriesService _countratesServices;
+        //private readonly ICountryGetCountriesServices _countryGetCountriesServices;
+        private readonly ICountryUploadFromExcelService _countriesUploadFromExcelService;
 
-        public CountriesController(ICountriesService countratesServices)
+        public CountriesController(ICountryUploadFromExcelService countriesUploadFromExcelService)
         {
-            _countratesServices = countratesServices;
+            //_countratesServices = countratesServices;
+            //_countryGetCountriesServices = countryGetCountriesServices;
+            _countriesUploadFromExcelService = countriesUploadFromExcelService;
         }
 
         [Route("[action]")]
@@ -38,7 +42,7 @@ namespace CURD_Practice.Controllers
                 return View();
             }
 
-            int countriesInserted =  await _countratesServices.UploadCountiresFromExcelFile(excelFile);
+            int countriesInserted =  await _countriesUploadFromExcelService.UploadCountiresFromExcelFile(excelFile);
 
             ViewBag.Message = $"{countriesInserted} Countries added";
 

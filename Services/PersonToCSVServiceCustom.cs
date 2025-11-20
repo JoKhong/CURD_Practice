@@ -20,16 +20,16 @@ using Exceptions;
 
 namespace Services
 {
-    public class PersonGetPersonsCSVServiceCustom : IPersonGetPersonsCSVService
+    public class PersonToCSVServiceCustom : IPersonsToCSVService
     {
         private readonly IPersonsRepository _personRepository;
 
-        private readonly ILogger<PersonGetPersonsCSVServiceCustom> _logger;
+        private readonly ILogger<PersonToCSVServiceCustom> _logger;
 
         private readonly IDiagnosticContext _diagnosticContext;
 
 
-        public PersonGetPersonsCSVServiceCustom(IPersonsRepository personRepo, ILogger<PersonGetPersonsCSVServiceCustom> logger, IDiagnosticContext diagContext)
+        public PersonToCSVServiceCustom(IPersonsRepository personRepo, ILogger<PersonToCSVServiceCustom> logger, IDiagnosticContext diagContext)
         {
             _personRepository = personRepo;
             _logger = logger;
@@ -37,7 +37,7 @@ namespace Services
             _diagnosticContext = diagContext;
         }
 
-        public async Task<MemoryStream> GetPersonsCSV(List<PersonResponse> AllPersons)
+        public async Task<MemoryStream> PersonsToSCV(List<PersonResponse> AllPersons)
         {
             _logger.LogInformation("GetPersonsCSVCustom of PersonServices");
 

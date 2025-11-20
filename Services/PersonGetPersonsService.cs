@@ -20,7 +20,7 @@ using Exceptions;
 
 namespace Services
 {
-    public class PersonGetPersonsService : IPersonGetPersonsServices
+    public class PersonGetPersonsService : IPersonGetterServices
     {
         private readonly IPersonsRepository _personRepository;
 
@@ -28,10 +28,16 @@ namespace Services
 
         private readonly IDiagnosticContext _diagnosticContext;
 
-        public PersonGetPersonsService(IPersonsRepository personRepo, ILogger<PersonGetPersonsService> logger, IDiagnosticContext diagContext)
+        private readonly IPersonsToCSVService _personToCSVService;
+        private readonly IPersonsToExcelService _personToExcelService;
+
+        public PersonGetPersonsService(IPersonsRepository personRepo, IPersonsToCSVService personToCSVService, IPersonsToExcelService personsToExcelService, ILogger<PersonGetPersonsService> logger, IDiagnosticContext diagContext)
         {
             _personRepository = personRepo;
             _logger = logger;
+
+            _personToCSVService = personToCSVService;
+            _personToExcelService = personsToExcelService;
 
             _diagnosticContext = diagContext;
         }
@@ -111,6 +117,15 @@ namespace Services
 
         }
 
+        public async Task<MemoryStream> GetPersonsCSV(List<PersonResponse> AllPersons)
+        {
+            return await _personToCSVService.PersonsToSCV(AllPersons);
+        }
+
+        public async Task<MemoryStream> GetPersonsExcel(List<PersonResponse> allPersons)
+        {
+            return await _personToExcelService.PersonsToExcel(allPersons);
+        }
     }
     
 }

@@ -1,12 +1,14 @@
 ﻿using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using System;
+using System.Formats.Asn1;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace ServiceContracts
 {
-    public interface IPersonGetPersonsServices
-    {
+    public interface IPersonGetterServices
+    {  
         /// <summary>
         /// Gets all Persons 
         /// </summary>
@@ -21,5 +23,9 @@ namespace ServiceContracts
         /// <param name="searchString"></param>
         /// <returns>Returns PersonResponse based on searchBy and searchString</returns>
         Task<List<PersonResponse>> GetFilteredPersons(string searchBy, string? searchString);
+
+        Task<MemoryStream> GetPersonsCSV(List<PersonResponse> AllPersons);
+        Task<MemoryStream> GetPersonsExcel(List<PersonResponse> allPersons);
+
     }
 }

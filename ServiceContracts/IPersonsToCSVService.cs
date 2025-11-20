@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace ServiceContracts
 {
-    public interface IPersonGetPersonsExcelService
+    public interface IPersonsToCSVService
     {
-        Task<MemoryStream> GetPersonsExcel(List<PersonResponse> allPersons);
+        Task<MemoryStream> PersonsToSCV(List<PersonResponse> AllPersons);
     }
 }

@@ -32,25 +32,25 @@ namespace CURD_Practice.Controllers
         //private readonly IPersonsServices _personsServices;
 
         private readonly IPersonAdderService _personAdderService;
-        private readonly IPersonGetPersonsServices _personGetPersonsServices;
+        private readonly IPersonGetterServices _personGetPersonsServices;
         private readonly IPersonGetSortedPersonsService _personGetSortedPersonsServices;
         private readonly IPersonUpdatePersonService _personUpdatePersonService;
         private readonly IPersonDeletePersonService _personDeletePersonService;
 
-        private readonly IPersonGetPersonsCSVService _personGetPersonsCSVService;
-        private readonly IPersonGetPersonsExcelService _personGetPersonsExcelService;
+        private readonly IPersonsToCSVService _personGetPersonsCSVService;
+        private readonly IPersonsToExcelService _personGetPersonsExcelService;
 
         private readonly ICountryGetCountriesServices _countryGetCountriesServices;
 
         private readonly ILogger<PersonsController> _logger;
 
         public PersonsController(IPersonAdderService personAdderService
-            , IPersonGetPersonsServices personGetPersonsServices
+            , IPersonGetterServices personGetPersonsServices
             , IPersonGetSortedPersonsService personGetSortedPersonsService
             , IPersonUpdatePersonService personUpdatePersonService
             , IPersonDeletePersonService personDeletePersonService
-            , IPersonGetPersonsCSVService personGetPersonsCSVService
-            , IPersonGetPersonsExcelService personGetPersonsExcelService
+            , IPersonsToCSVService personGetPersonsCSVService
+            , IPersonsToExcelService personGetPersonsExcelService
             , ICountryGetCountriesServices countryGetCountriesServices
             , ILogger<PersonsController> logger)
         {
@@ -241,14 +241,14 @@ namespace CURD_Practice.Controllers
         [Route("[action]")]
         public async Task<IActionResult> PersonsCsv()
         {
-            MemoryStream stream =  await _personGetPersonsCSVService.GetPersonsCSV(await _personGetPersonsServices.GetAllPersons());
+            MemoryStream stream =  await _personGetPersonsCSVService.PersonsToSCV(await _personGetPersonsServices.GetAllPersons());
             return File(stream, "application/octet-stream", "persons.csv");
         }
 
         [Route("[action]")]
         public async Task<IActionResult> PersonsExcel()
         {
-            MemoryStream stream = await _personGetPersonsExcelService.GetPersonsExcel(await _personGetPersonsServices.GetAllPersons());
+            MemoryStream stream = await _personGetPersonsExcelService.PersonsToExcel(await _personGetPersonsServices.GetAllPersons());
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "persons.xlsx");
         }
 

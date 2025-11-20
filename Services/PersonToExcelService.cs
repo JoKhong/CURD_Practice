@@ -20,15 +20,15 @@ using Exceptions;
 
 namespace Services
 {
-    public class PersonGetPersonsExcelService : IPersonGetPersonsExcelService
+    public class PersonToExcelService : IPersonsToExcelService
     {
         private readonly IPersonsRepository _personRepository;
 
-        private readonly ILogger<PersonGetPersonsExcelService> _logger;
+        private readonly ILogger<PersonToExcelService> _logger;
 
         private readonly IDiagnosticContext _diagnosticContext;
 
-        public PersonGetPersonsExcelService(IPersonsRepository personRepo, ILogger<PersonGetPersonsExcelService> logger, IDiagnosticContext diagContext)
+        public PersonToExcelService(IPersonsRepository personRepo, ILogger<PersonToExcelService> logger, IDiagnosticContext diagContext)
         {
             _personRepository = personRepo;
             _logger = logger;
@@ -36,7 +36,7 @@ namespace Services
             _diagnosticContext = diagContext;
         }
 
-        public async Task<MemoryStream> GetPersonsExcel(List<PersonResponse> allPersons)
+        public async Task<MemoryStream> PersonsToExcel(List<PersonResponse> allPersons)
         {
             _logger.LogInformation("GetPersonsExcel of PersonServices");
 

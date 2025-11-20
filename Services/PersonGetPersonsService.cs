@@ -20,20 +20,45 @@ using Exceptions;
 
 namespace Services
 {
-    public class PersonGetFilteredPersonsService : IPersonGetFilteredPersonsService
+    public class PersonGetPersonsService : IPersonGetPersonsServices
     {
         private readonly IPersonsRepository _personRepository;
 
-        private readonly ILogger<PersonGetFilteredPersonsService> _logger;
+        private readonly ILogger<PersonGetPersonsService> _logger;
 
         private readonly IDiagnosticContext _diagnosticContext;
 
-        public PersonGetFilteredPersonsService(IPersonsRepository personRepo, ILogger<PersonGetFilteredPersonsService> logger, IDiagnosticContext diagContext)
+        public PersonGetPersonsService(IPersonsRepository personRepo, ILogger<PersonGetPersonsService> logger, IDiagnosticContext diagContext)
         {
             _personRepository = personRepo;
             _logger = logger;
 
             _diagnosticContext = diagContext;
+        }
+
+        public async Task<List<PersonResponse>> GetAllPersons()
+        {
+            _logger.LogInformation("GetAllPersons of PersonServices");
+
+            var persons = await _personRepository.GetAllPersons();
+
+            return persons.Select(temp => temp.ToPersonResponse() ).ToList();
+        }
+
+        public async Task<PersonResponse?> GetPersonById(Guid? id)
+        {
+            _logger.LogInformation("GetPersonById of PersonServices");
+            //throw new NotImplementedException();
+
+            if (id == null)
+                return null;
+
+            Person? response = await _personRepository.GetPersonById(id.Value);
+
+            if (response == null)
+                return null;
+
+            return response.ToPersonResponse();
         }
 
         public async Task<List<PersonResponse>> GetFilteredPersons(string searchBy, string? searchString)
@@ -43,7 +68,7 @@ namespace Services
 
             List<Person>? persons = null as List<Person>;
 
-            using (Operation.Time("Filter from Database")) 
+            using (Operation.Time("Filter from Database"))
             {
                 persons = searchBy switch
                 {

@@ -9,7 +9,7 @@ using System.Diagnostics.Metrics;
 
 namespace Services
 {
-    public class CountryGetCountriesService : ICountryGetCountriesService
+    public class CountryGetCountriesService : ICountryGetCountriesServices
     {
         private readonly ICountriesRepository _countriesRepository;
 

@@ -5,8 +5,15 @@ using System.Threading.Tasks;
 
 namespace ServiceContracts
 {
-    public interface IPersonGetFilteredPersonsService
+    public interface IPersonGetPersonsServices
     {
+        /// <summary>
+        /// Gets all Persons 
+        /// </summary>
+        /// <returns></returns>
+        Task<List<PersonResponse>> GetAllPersons();
+        Task<PersonResponse?> GetPersonById(Guid? id);
+        
         /// <summary>
         /// Get Persons based on search by field and Search name
         /// </summary>

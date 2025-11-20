@@ -8,9 +8,9 @@ namespace CURD_Practice.Filters.ActionFilters
 {
     public class PersonCreateAndEditPostActionFilter : IAsyncActionFilter
     {
-        private readonly ICountryGetCountriesServices _countryGetCountriesServices;
+        private readonly ICountryGetterServices _countryGetCountriesServices;
 
-        public PersonCreateAndEditPostActionFilter(ICountryGetCountriesServices countryGeetCountriesServices)
+        public PersonCreateAndEditPostActionFilter(ICountryGetterServices countryGeetCountriesServices)
         {
             _countryGetCountriesServices = countryGeetCountriesServices;
         }

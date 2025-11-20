@@ -50,7 +50,7 @@ namespace CURD_Practice
 
             //Countries Services
             services.AddScoped<ICountryAdderService, CountryAdderService>();
-            services.AddScoped<ICountryGetCountriesServices, CountryGetCountriesService>();
+            services.AddScoped<ICountryGetterServices, CountryGetterServices>();
             services.AddScoped<ICountryUploadFromExcelService, CountryUploadFromExcelService>();
 
             //Persons Serivces

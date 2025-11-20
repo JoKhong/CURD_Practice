@@ -26,7 +26,6 @@ namespace CURD_Tests
 {
     public class PersonsServices_Test
     {
-        private readonly ICountriesService _countryService;
         private readonly IPersonsServices _personService;
         private readonly ITestOutputHelper _testOutputHelper;
 

@@ -40,7 +40,7 @@ namespace CURD_Practice.Controllers
         private readonly IPersonsToCSVService _personGetPersonsCSVService;
         private readonly IPersonsToExcelService _personGetPersonsExcelService;
 
-        private readonly ICountryGetCountriesServices _countryGetCountriesServices;
+        private readonly ICountryGetterServices _countryGetCountriesServices;
 
         private readonly ILogger<PersonsController> _logger;
 
@@ -51,7 +51,7 @@ namespace CURD_Practice.Controllers
             , IPersonDeletePersonService personDeletePersonService
             , IPersonsToCSVService personGetPersonsCSVService
             , IPersonsToExcelService personGetPersonsExcelService
-            , ICountryGetCountriesServices countryGetCountriesServices
+            , ICountryGetterServices countryGetCountriesServices
             , ILogger<PersonsController> logger)
         {
             _personAdderService = personAdderService;

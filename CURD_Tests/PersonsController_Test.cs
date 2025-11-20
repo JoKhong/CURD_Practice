@@ -45,8 +45,8 @@ namespace CURD_Tests
         private readonly IPersonsToExcelService _personsToExcelService;
         private readonly Mock<IPersonsToExcelService> _personsToExcelServiceMock;
 
-        private readonly ICountryGetCountriesServices _countryGetCountriesServices;
-        private readonly Mock<ICountryGetCountriesServices> _countryGetCountriesServicesMock;
+        private readonly ICountryGetterServices _countryGetCountriesServices;
+        private readonly Mock<ICountryGetterServices> _countryGetCountriesServicesMock;
 
         private readonly ILogger<PersonsController> _logger;
         private readonly Mock<ILogger<PersonsController>> _loggerMock;
@@ -80,7 +80,7 @@ namespace CURD_Tests
             _personsToExcelServiceMock = new Mock<IPersonsToExcelService>();
             _personsToExcelService = _personsToExcelServiceMock.Object;
 
-            _countryGetCountriesServicesMock = new Mock<ICountryGetCountriesServices>();
+            _countryGetCountriesServicesMock = new Mock<ICountryGetterServices>();
             _countryGetCountriesServices = _countryGetCountriesServicesMock.Object;
 
             _loggerMock = new Mock<ILogger<PersonsController>>();

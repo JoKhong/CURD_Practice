@@ -14,7 +14,7 @@ namespace ServiceContracts
     /// </summary>
     /// <param name="AddRequest">Country object to add</param>
     /// <returns>Returns the country object after adding it (including newly generated country id)</returns>
-    public interface ICountryGetCountriesServices
+    public interface ICountryGetterServices
     {
         Task<List<CountryResponse>>  GetCountriesAll();
         Task<CountryResponse?> GetCountryById(Guid? id);

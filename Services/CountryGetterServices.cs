@@ -9,11 +9,11 @@ using System.Diagnostics.Metrics;
 
 namespace Services
 {
-    public class CountryGetCountriesService : ICountryGetCountriesServices
+    public class CountryGetterServices : ICountryGetterServices
     {
         private readonly ICountriesRepository _countriesRepository;
 
-        public CountryGetCountriesService(ICountriesRepository countriesRepo)
+        public CountryGetterServices(ICountriesRepository countriesRepo)
         {
             _countriesRepository = countriesRepo;
         }

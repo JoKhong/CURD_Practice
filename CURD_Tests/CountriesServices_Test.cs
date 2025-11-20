@@ -9,7 +9,7 @@ using RepositoryContracts;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using Services;
-
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 using Xunit.Sdk;
@@ -18,11 +18,14 @@ namespace CURD_Tests
 {
     public class CountriesServices_Test
     {
-        private readonly ICountriesService _countryService;
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        private readonly Mock<ICountriesRepository> _countriesRepoMock;
         private readonly ICountriesRepository _countriesRepository;
+        private readonly Mock<ICountriesRepository> _countriesRepoMock;
+
+        private readonly ICountryAdderService _countryAdderService;
+        private readonly ICountryGetterServices _countryGetterServices;
+        private readonly ICountryUploadFromExcelService _countryUploadFromExcelService;
+
+        private readonly ITestOutputHelper _testOutputHelper;
 
         private readonly IFixture _fixture;
 
@@ -37,13 +40,19 @@ namespace CURD_Tests
             _countriesRepoMock = new Mock<ICountriesRepository>();
             _countriesRepository = _countriesRepoMock.Object;
 
+            //CountryAdder 
+            _countryAdderService = new CountryAdderService(_countriesRepository);
+            _countryGetterServices = new CountryGetterServices(_countriesRepository);
+            _countryUploadFromExcelService = new CountryUploadFromExcelService(_countriesRepository);
+
             DbContextMock<ApplicationDbContext> dbContextMock = new DbContextMock<ApplicationDbContext>
               (new DbContextOptionsBuilder<ApplicationDbContext>().Options);
 
             ApplicationDbContext dbContext = dbContextMock.Object;
             dbContextMock.CreateDbSetMock(temp => temp.Countries, countriesInitialData);
 
-            _countryService = new CountryServices(_countriesRepository);
+
+
             _testOutputHelper = testOutputHelper;
         }
 
@@ -59,7 +68,7 @@ namespace CURD_Tests
 
             _countriesRepoMock.Setup(temp => temp.AddCountry(It.IsAny<Country>())).ReturnsAsync(country);
 
-            var action = async () => { await _countryService.AddCountry(request); };
+            var action = async () => { await _countryAdderService.AddCountry(request); };
 
             await action.Should().ThrowAsync<ArgumentNullException>();
         }
@@ -80,7 +89,7 @@ namespace CURD_Tests
 
             var action = async () =>
             {
-                await _countryService.AddCountry(request);
+                await _countryAdderService.AddCountry(request);
             };
 
             await action.Should().ThrowAsync<ArgumentException>();
@@ -98,7 +107,7 @@ namespace CURD_Tests
             _countriesRepoMock.Setup( temp => temp.AddCountry(It.IsAny<Country>())).ReturnsAsync(country1);
             _countriesRepoMock.Setup( temp => temp.GetCountryByName(It.IsAny<string>())).ReturnsAsync(null as Country);
 
-            CountryResponse firstResponse = await _countryService.AddCountry(countryAddRequest1);
+            CountryResponse firstResponse = await _countryAdderService.AddCountry(countryAddRequest1);
 
             //Act
             var action = async () =>
@@ -107,7 +116,7 @@ namespace CURD_Tests
                 _countriesRepoMock.Setup(temp => temp.AddCountry(It.IsAny<Country>())).ReturnsAsync(country1);
                 _countriesRepoMock.Setup(temp => temp.GetCountryByName(It.IsAny<string>())).ReturnsAsync(country1);
 
-                await _countryService.AddCountry(countryAddRequest2);
+                await _countryAdderService.AddCountry(countryAddRequest2);
             };
 
             //Assert
@@ -125,7 +134,7 @@ namespace CURD_Tests
             _countriesRepoMock.Setup(temp => temp.AddCountry(It.IsAny<Country>())).ReturnsAsync(country1);
             _countriesRepoMock.Setup(temp => temp.GetCountryByName(It.IsAny<string>())).ReturnsAsync(null as Country);
 
-            CountryResponse addedCountry = await _countryService.AddCountry(countryAddRequest1);
+            CountryResponse addedCountry = await _countryAdderService.AddCountry(countryAddRequest1);
             country1.CountryId = addedCountry.CountryId;
             countryResponse.CountryId = addedCountry.CountryId;
 
@@ -144,7 +153,7 @@ namespace CURD_Tests
 
             _countriesRepoMock.Setup(temp => temp.GetAllCountries()).ReturnsAsync(countries);
 
-            List<CountryResponse> result = await _countryService.GetAllCountries();
+            List<CountryResponse> result = await _countryGetterServices.GetCountriesAll();
 
             result.Should().BeEmpty();
 
@@ -166,7 +175,7 @@ namespace CURD_Tests
 
             _countriesRepoMock.Setup(x => x.GetAllCountries()).ReturnsAsync(countries);
             
-            List<CountryResponse> actualResponse = await _countryService.GetAllCountries();
+            List<CountryResponse> actualResponse = await _countryGetterServices.GetCountriesAll();
 
             actualResponse.Should().BeEquivalentTo(mockResponse);
         }
@@ -187,7 +196,7 @@ namespace CURD_Tests
             _countriesRepoMock.Setup(x => x.GetCountryById(It.IsAny<Guid>())).ReturnsAsync(mockCountry);
 
           
-            CountryResponse? countryById = await _countryService.GetCountryById(mockCountry.CountryId);
+            CountryResponse? countryById = await _countryGetterServices.GetCountryById(mockCountry.CountryId);
 
             countryById.Should().Be(mockResponse);
 
@@ -200,7 +209,7 @@ namespace CURD_Tests
 
             _countriesRepoMock.Setup(x => x.GetCountryById(It.IsAny<Guid>())).ReturnsAsync(null as Country);
 
-            CountryResponse? countryById = await _countryService.GetCountryById(countryGuid);
+            CountryResponse? countryById = await _countryGetterServices.GetCountryById(countryGuid);
 
             countryById.Should().BeNull();
         }
